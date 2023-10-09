@@ -4,4 +4,6 @@
     <string name="search">Search</string>
     <string name="home_screen_popular_text">Popular</string>
     <string name="all_popular_movies_txt">All</string>
+    <string name="popular_movie_image">Popular Movie Image</string>
+    <string name="image">popular_movie_image\n</string>
 </resources>
