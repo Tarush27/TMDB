@@ -29,7 +29,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/home_screen_popular_text"
                 android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textSize="22sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,29 +47,23 @@
                 android:paddingBottom="5dp"
                 android:text="@string/all_popular_movies_txt"
                 android:textColor="#000000"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <HorizontalScrollView
-                android:id="@+id/popular_movies_horizontal_sv"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/popular_movies_horizontal_rv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:orientation="horizontal"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/popular_tv">
+                app:layout_constraintTop_toBottomOf="@id/popular_tv"
+                tools:itemCount="2"
+                tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/home_screen_popular_movie_section_item" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/popular_movies_horizontal_rv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:itemCount="2"
-                    tools:listitem="@layout/home_screen_popular_movie_section_item" />
-
-            </HorizontalScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -12,7 +12,7 @@ import retrofit2.Response
 class PopularMoviesRepository(private val popularMoviesService: PopularMoviesService) {
     private val _popularMoviesResponse = MutableLiveData<PopularMoviesResponse>()
     val popularMoviesResponse: LiveData<PopularMoviesResponse> = _popularMoviesResponse
-    suspend fun getPopularMovies() {
+    fun getPopularMovies() {
         val response: Call<PopularMoviesResponse> = popularMoviesService.getPopularMoviesResponse()
         response.enqueue(object : Callback<PopularMoviesResponse> {
             override fun onResponse(
