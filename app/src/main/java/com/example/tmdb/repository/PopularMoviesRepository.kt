@@ -15,6 +15,9 @@ class PopularMoviesRepository(private val popularMoviesService: PopularMoviesSer
 
     private val _topRatedMoviesResponse = MutableLiveData<PopularMoviesResponse>()
     val topRatedMoviesResponse: LiveData<PopularMoviesResponse> = _topRatedMoviesResponse
+
+    private val _upComingMoviesResponse = MutableLiveData<PopularMoviesResponse>()
+    val upComingMoviesResponse: LiveData<PopularMoviesResponse> = _upComingMoviesResponse
     fun getPopularMovies() {
         val response: Call<PopularMoviesResponse> = popularMoviesService.getPopularMoviesResponse()
         response.enqueue(object : Callback<PopularMoviesResponse> {
@@ -41,6 +44,24 @@ class PopularMoviesRepository(private val popularMoviesService: PopularMoviesSer
                 response: Response<PopularMoviesResponse>
             ) {
                 _topRatedMoviesResponse.value = response.body()
+                Log.d("repo", response.toString())
+            }
+
+            override fun onFailure(call: Call<PopularMoviesResponse>, t: Throwable) {
+                Log.d("repo", t.message.toString())
+            }
+
+        })
+    }
+
+    fun getUpcomingMovies() {
+        val response: Call<PopularMoviesResponse> = popularMoviesService.getUpcomingMoviesResponse()
+        response.enqueue(object : Callback<PopularMoviesResponse> {
+            override fun onResponse(
+                call: Call<PopularMoviesResponse>,
+                response: Response<PopularMoviesResponse>
+            ) {
+                _upComingMoviesResponse.value = response.body()
                 Log.d("repo", response.toString())
             }
 

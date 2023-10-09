@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tmdb.R
 import com.example.tmdb.adapter.PopularMoviesAdapter
 import com.example.tmdb.adapter.TopRatedMoviesAdapter
+import com.example.tmdb.adapter.UpcomingMoviesAdapter
 import com.example.tmdb.databinding.HomeScreenActivityBinding
 import com.example.tmdb.networking.PopularMoviesService
 import com.example.tmdb.networking.RetrofitClient
@@ -20,6 +21,7 @@ class HomeScreenActivity : BaseThemeActivity() {
     private lateinit var binding: HomeScreenActivityBinding
     private var popularMoviesAdapter = PopularMoviesAdapter()
     private var topRatedMoviesAdapter = TopRatedMoviesAdapter()
+    private var upComingMoviesAdapter = UpcomingMoviesAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = HomeScreenActivityBinding.inflate(layoutInflater)
@@ -38,12 +40,7 @@ class HomeScreenActivity : BaseThemeActivity() {
         }
         setupPopularMoviesRv()
         setupTopRatedMoviesRv()
-//        getAndShowMovies()
-//        lifecycleScope.launch {
-//            val result = withContext(Dispatchers.Main) {
-//                popularMoviesViewModel.getPopularMovies()
-//            }
-//        }
+        setupUpcomingMoviesRv()
 
         popularMoviesViewModel.getPopularMoviesResponse.observe(this) { response ->
             val popularMovies = response.popularMovies
@@ -57,16 +54,18 @@ class HomeScreenActivity : BaseThemeActivity() {
 
         }
 
+        popularMoviesViewModel.getUpComingMovies.observe(this) { response ->
+            val upComingMovies = response.popularMovies
+            Log.d("HSA", "upComingMovies:$upComingMovies")
+            upComingMoviesAdapter.updateUpcomingMoviesList(upComingMovies)
+
+        }
+
 
         popularMoviesViewModel.getTopRatedMovies()
         popularMoviesViewModel.getPopularMovies()
+        popularMoviesViewModel.getUpComingMovies()
 
-    }
-
-    private fun getAndShowMovies() {
-        popularMoviesViewModel.getPopularMoviesResponse.observe(this) { response ->
-            response.popularMovies
-        }
     }
 
     private fun setupPopularMoviesRv() {
@@ -87,5 +86,15 @@ class HomeScreenActivity : BaseThemeActivity() {
         )
 
         binding.topRatedMoviesHorizontalRv.adapter = topRatedMoviesAdapter
+    }
+
+    private fun setupUpcomingMoviesRv() {
+        binding.upcomingMoviesHorizontalRv.layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+        binding.upcomingMoviesHorizontalRv.adapter = upComingMoviesAdapter
     }
 }

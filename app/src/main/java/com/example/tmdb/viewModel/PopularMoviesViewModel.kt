@@ -12,4 +12,7 @@ class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesR
 
     fun getTopRatedMovies() = popularMoviesRepository.getTopRatedMovies()
     val getTopRatedMoviesResponse = popularMoviesRepository.topRatedMoviesResponse
+
+    fun getUpComingMovies() = popularMoviesRepository.getUpcomingMovies()
+    val getUpComingMovies = popularMoviesRepository.upComingMoviesResponse
 }
