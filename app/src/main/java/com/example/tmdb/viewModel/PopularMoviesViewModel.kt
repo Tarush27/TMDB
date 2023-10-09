@@ -8,7 +8,8 @@ import kotlinx.coroutines.launch
 class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesRepository) :
     ViewModel() {
     fun getPopularMovies() = popularMoviesRepository.getPopularMovies()
-
-
     val getPopularMoviesResponse = popularMoviesRepository.popularMoviesResponse
+
+    fun getTopRatedMovies() = popularMoviesRepository.getTopRatedMovies()
+    val getTopRatedMoviesResponse = popularMoviesRepository.topRatedMoviesResponse
 }

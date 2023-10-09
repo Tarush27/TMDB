@@ -9,4 +9,7 @@ interface PopularMoviesService {
     @GET("popular?api_key=1f590be8f881ebce14b4088e08124d84")
     fun getPopularMoviesResponse(
     ): Call<PopularMoviesResponse>
+
+    @GET("top_rated?api_key=1f590be8f881ebce14b4088e08124d84")
+    fun getTopRatedMoviesResponse(): Call<PopularMoviesResponse>
 }

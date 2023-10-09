@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tmdb.R
 import com.example.tmdb.adapter.PopularMoviesAdapter
+import com.example.tmdb.adapter.TopRatedMoviesAdapter
 import com.example.tmdb.databinding.HomeScreenActivityBinding
 import com.example.tmdb.networking.PopularMoviesService
 import com.example.tmdb.networking.RetrofitClient
@@ -18,6 +19,7 @@ class HomeScreenActivity : BaseThemeActivity() {
     private lateinit var popularMoviesViewModel: PopularMoviesViewModel
     private lateinit var binding: HomeScreenActivityBinding
     private var popularMoviesAdapter = PopularMoviesAdapter()
+    private var topRatedMoviesAdapter = TopRatedMoviesAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = HomeScreenActivityBinding.inflate(layoutInflater)
@@ -35,6 +37,7 @@ class HomeScreenActivity : BaseThemeActivity() {
             menuInflater.inflate(R.menu.search_menu, menu)
         }
         setupPopularMoviesRv()
+        setupTopRatedMoviesRv()
 //        getAndShowMovies()
 //        lifecycleScope.launch {
 //            val result = withContext(Dispatchers.Main) {
@@ -47,8 +50,15 @@ class HomeScreenActivity : BaseThemeActivity() {
             Log.d("HSA", "popularMovies:$popularMovies")
             popularMoviesAdapter.updatePopularMoviesList(popularMovies)
         }
+        popularMoviesViewModel.getTopRatedMoviesResponse.observe(this) { response ->
+            val topRatedMovies = response.popularMovies
+            Log.d("HSA", "topRatedMovies:$topRatedMovies")
+            topRatedMoviesAdapter.updateTopRatedMoviesList(topRatedMovies)
+
+        }
 
 
+        popularMoviesViewModel.getTopRatedMovies()
         popularMoviesViewModel.getPopularMovies()
 
     }
@@ -67,5 +77,15 @@ class HomeScreenActivity : BaseThemeActivity() {
         )
 
         binding.popularMoviesHorizontalRv.adapter = popularMoviesAdapter
+    }
+
+    private fun setupTopRatedMoviesRv() {
+        binding.topRatedMoviesHorizontalRv.layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+        binding.topRatedMoviesHorizontalRv.adapter = topRatedMoviesAdapter
     }
 }
