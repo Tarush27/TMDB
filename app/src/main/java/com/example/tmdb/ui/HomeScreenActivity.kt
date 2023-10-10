@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tmdb.R
 import com.example.tmdb.adapter.PopularMoviesAdapter
 import com.example.tmdb.adapter.TopRatedMoviesAdapter
+import com.example.tmdb.adapter.TrendingMoviesAdapter
 import com.example.tmdb.adapter.UpcomingMoviesAdapter
 import com.example.tmdb.databinding.HomeScreenActivityBinding
 import com.example.tmdb.networking.PopularMoviesService
@@ -22,6 +23,7 @@ class HomeScreenActivity : BaseThemeActivity() {
     private var popularMoviesAdapter = PopularMoviesAdapter()
     private var topRatedMoviesAdapter = TopRatedMoviesAdapter()
     private var upComingMoviesAdapter = UpcomingMoviesAdapter()
+    private var trendingMoviesAdapter = TrendingMoviesAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = HomeScreenActivityBinding.inflate(layoutInflater)
@@ -41,6 +43,7 @@ class HomeScreenActivity : BaseThemeActivity() {
         setupPopularMoviesRv()
         setupTopRatedMoviesRv()
         setupUpcomingMoviesRv()
+        setupTrendingMoviesDayWeekRv()
 
         popularMoviesViewModel.getPopularMoviesResponse.observe(this) { response ->
             val popularMovies = response.popularMovies
@@ -61,6 +64,30 @@ class HomeScreenActivity : BaseThemeActivity() {
 
         }
 
+        popularMoviesViewModel.getTrendingMovies.observe(this) { response ->
+            val trendingMovies = response.popularMovies
+            Log.d("HSAtrending", "trendingMovies:$trendingMovies")
+            trendingMoviesAdapter.updateTrendingMoviesList(trendingMovies)
+
+        }
+
+
+        popularMoviesViewModel.getTrendingMovies(false)
+
+        binding.trendingMoviesDayWeekSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                binding.trendingMoviesDayWeekSwitch.textOn = "Week"
+                popularMoviesViewModel.getTrendingMovies(true)
+                popularMoviesViewModel.getTrendingMovies.observe(this) {
+                    trendingMoviesAdapter.updateTrendingMoviesList(it.popularMovies)
+                }
+            } else {
+                popularMoviesViewModel.getTrendingMovies(false)
+                popularMoviesViewModel.getTrendingMovies.observe(this) {
+                    trendingMoviesAdapter.updateTrendingMoviesList(it.popularMovies)
+                }
+            }
+        }
 
         popularMoviesViewModel.getTopRatedMovies()
         popularMoviesViewModel.getPopularMovies()
@@ -96,5 +123,16 @@ class HomeScreenActivity : BaseThemeActivity() {
         )
 
         binding.upcomingMoviesHorizontalRv.adapter = upComingMoviesAdapter
+    }
+
+    private fun setupTrendingMoviesDayWeekRv() {
+        trendingMoviesAdapter = TrendingMoviesAdapter()
+        binding.trendingMoviesHorizontalRv.layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+        binding.trendingMoviesHorizontalRv.adapter = trendingMoviesAdapter
     }
 }

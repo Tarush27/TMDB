@@ -6,7 +6,9 @@
     <string name="home_screen_top_rated_text">Top rated</string>
     <string name="now_playing_movies_text">Now Playing</string>
     <string name="upcoming_movies_text">Upcoming</string>
+    <string name="trending_movies_text">Trending Movies</string>
     <string name="all_popular_movies_txt">All</string>
     <string name="popular_movie_image">Popular Movie Image</string>
     <string name="image">popular_movie_image\n</string>
+    <string name="day">Day</string>
 </resources>

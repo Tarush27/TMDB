@@ -209,6 +209,54 @@
                             tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             tools:listitem="@layout/home_screen_upcoming_movies_section_item" />
 
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/upcoming_movies_horizontal_rv">
+
+                            <TextView
+                                android:id="@+id/trending_movies_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/trending_movies_text"
+                                android:textColor="@color/white"
+                                android:textSize="22sp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/trending_movies_day_week_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="30dp"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginEnd="18dp"
+                                android:checked="false"
+                                android:textOff="@string/day"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:showText="true" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/trending_movies_horizontal_rv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="15dp"
+                                android:orientation="horizontal"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/trending_movies_tv"
+                                tools:itemCount="2"
+                                tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                tools:listitem="@layout/single_trending_movie_day_week" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
