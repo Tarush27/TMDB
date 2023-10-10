@@ -9,6 +9,7 @@ import com.example.tmdb.R
 import com.example.tmdb.adapter.PopularMoviesAdapter
 import com.example.tmdb.adapter.TopRatedMoviesAdapter
 import com.example.tmdb.adapter.TrendingMoviesAdapter
+import com.example.tmdb.adapter.TrendingTVShowsAdapter
 import com.example.tmdb.adapter.UpcomingMoviesAdapter
 import com.example.tmdb.databinding.HomeScreenActivityBinding
 import com.example.tmdb.networking.PopularMoviesService
@@ -24,6 +25,7 @@ class HomeScreenActivity : BaseThemeActivity() {
     private var topRatedMoviesAdapter = TopRatedMoviesAdapter()
     private var upComingMoviesAdapter = UpcomingMoviesAdapter()
     private var trendingMoviesAdapter = TrendingMoviesAdapter()
+    private var trendingTVShowsAdapter = TrendingTVShowsAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = HomeScreenActivityBinding.inflate(layoutInflater)
@@ -44,7 +46,7 @@ class HomeScreenActivity : BaseThemeActivity() {
         setupTopRatedMoviesRv()
         setupUpcomingMoviesRv()
         setupTrendingMoviesDayWeekRv()
-
+        setupTrendingTVShowsDayWeekRv()
         popularMoviesViewModel.getPopularMoviesResponse.observe(this) { response ->
             val popularMovies = response.popularMovies
             Log.d("HSA", "popularMovies:$popularMovies")
@@ -71,9 +73,7 @@ class HomeScreenActivity : BaseThemeActivity() {
 
         }
 
-
         popularMoviesViewModel.getTrendingMovies(false)
-
         binding.trendingMoviesDayWeekSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 binding.trendingMoviesDayWeekSwitch.textOn = "Week"
@@ -85,6 +85,29 @@ class HomeScreenActivity : BaseThemeActivity() {
                 popularMoviesViewModel.getTrendingMovies(false)
                 popularMoviesViewModel.getTrendingMovies.observe(this) {
                     trendingMoviesAdapter.updateTrendingMoviesList(it.popularMovies)
+                }
+            }
+        }
+
+        popularMoviesViewModel.getTrendingTVShows(false)
+
+        popularMoviesViewModel.getTrendingTVShows.observe(this) { response ->
+            val trendingTVShows = response.trendingTVShows
+            Log.d("HSAtrendingtvshow", "trendingTVShows:$trendingTVShows")
+            trendingTVShowsAdapter.updateTrendingTVShowsList(trendingTVShows)
+
+        }
+        binding.trendingTVShowsDayWeekSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                binding.trendingTVShowsDayWeekSwitch.textOn = "Week"
+                popularMoviesViewModel.getTrendingTVShows(true)
+                popularMoviesViewModel.getTrendingTVShows.observe(this) {
+                    trendingTVShowsAdapter.updateTrendingTVShowsList(it.trendingTVShows)
+                }
+            } else {
+                popularMoviesViewModel.getTrendingTVShows(false)
+                popularMoviesViewModel.getTrendingTVShows.observe(this) {
+                    trendingTVShowsAdapter.updateTrendingTVShowsList(it.trendingTVShows)
                 }
             }
         }
@@ -134,5 +157,16 @@ class HomeScreenActivity : BaseThemeActivity() {
         )
 
         binding.trendingMoviesHorizontalRv.adapter = trendingMoviesAdapter
+    }
+
+    private fun setupTrendingTVShowsDayWeekRv() {
+        trendingTVShowsAdapter = TrendingTVShowsAdapter()
+        binding.trendingTVShowsHorizontalRv.layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+        binding.trendingTVShowsHorizontalRv.adapter = trendingTVShowsAdapter
     }
 }

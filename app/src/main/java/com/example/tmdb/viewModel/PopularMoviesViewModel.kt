@@ -28,7 +28,17 @@ class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesR
                 .stringAbc()
         )
     }
-    //  popularMoviesRepository.getTrendingMovies()
 
     val getTrendingMovies = popularMoviesRepository.trendingMoviesResponse
+
+    fun getTrendingTVShows(isDayOrWeek: Boolean) {
+        popularMoviesRepository.getTrendingTVShows(
+            (if (isDayOrWeek)
+                TimeWindow.WEEK
+            else TimeWindow.DAY)
+                .stringAbc()
+        )
+    }
+
+    val getTrendingTVShows = popularMoviesRepository.trendingTVShowsResponse
 }

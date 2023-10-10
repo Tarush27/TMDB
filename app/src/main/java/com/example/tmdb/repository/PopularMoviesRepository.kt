@@ -3,10 +3,9 @@ package com.example.tmdb.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.tmdb.TimeWindow
 import com.example.tmdb.model.PopularMoviesResponse
+import com.example.tmdb.model.TrendingTVShowsResponse
 import com.example.tmdb.networking.PopularMoviesService
-import com.example.tmdb.stringAbc
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,6 +22,9 @@ class PopularMoviesRepository(private val popularMoviesService: PopularMoviesSer
 
     private val _trendingMoviesResponse = MutableLiveData<PopularMoviesResponse>()
     val trendingMoviesResponse: LiveData<PopularMoviesResponse> = _trendingMoviesResponse
+
+    private val _trendingTVShowsResponse = MutableLiveData<TrendingTVShowsResponse>()
+    val trendingTVShowsResponse: LiveData<TrendingTVShowsResponse> = _trendingTVShowsResponse
     fun getPopularMovies() {
         val response: Call<PopularMoviesResponse> = popularMoviesService.getPopularMoviesResponse()
         response.enqueue(object : Callback<PopularMoviesResponse> {
@@ -78,7 +80,6 @@ class PopularMoviesRepository(private val popularMoviesService: PopularMoviesSer
     }
 
 
-
     fun getTrendingMovies(type: String) {
 
         val response: Call<PopularMoviesResponse> =
@@ -93,6 +94,24 @@ class PopularMoviesRepository(private val popularMoviesService: PopularMoviesSer
             }
 
             override fun onFailure(call: Call<PopularMoviesResponse>, t: Throwable) {
+                Log.d("repo", t.message.toString())
+            }
+
+        })
+    }
+
+    fun getTrendingTVShows(type: String) {
+        val response: Call<TrendingTVShowsResponse> = popularMoviesService.getTrendingTVShowsResponse(type)
+        response.enqueue(object : Callback<TrendingTVShowsResponse> {
+            override fun onResponse(
+                call: Call<TrendingTVShowsResponse>,
+                response: Response<TrendingTVShowsResponse>
+            ) {
+                _trendingTVShowsResponse.value = response.body()
+                Log.d("trendingTVShows", "trendingTVShows : ${response.body()}")
+            }
+
+            override fun onFailure(call: Call<TrendingTVShowsResponse>, t: Throwable) {
                 Log.d("repo", t.message.toString())
             }
 
