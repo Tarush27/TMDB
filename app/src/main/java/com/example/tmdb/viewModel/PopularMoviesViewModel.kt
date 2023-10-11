@@ -1,11 +1,9 @@
 package com.example.tmdb.viewModel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.tmdb.TimeWindow
+import com.example.tmdb.Utils.TimeWindow
 import com.example.tmdb.repository.PopularMoviesRepository
-import com.example.tmdb.stringAbc
-import kotlinx.coroutines.launch
+import com.example.tmdb.Utils.stringAbc
 
 class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesRepository) :
     ViewModel() {

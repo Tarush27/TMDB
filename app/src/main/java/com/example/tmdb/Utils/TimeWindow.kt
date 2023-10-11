@@ -1,4 +1,4 @@
-package com.example.tmdb
+package com.example.tmdb.Utils
 
 enum class TimeWindow {
     DAY, WEEK

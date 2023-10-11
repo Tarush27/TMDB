@@ -1,5 +1,6 @@
 package com.example.tmdb.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.core.content.ContextCompat
@@ -30,6 +31,21 @@ class HomeScreenActivity : BaseThemeActivity() {
         super.onCreate(savedInstanceState)
         binding = HomeScreenActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.homeScreenAllPopularTv.setOnClickListener {
+            val intent = Intent(this, ScreensActivity::class.java)
+            intent.putExtra("screenType", "Popular")
+            startActivity(intent)
+        }
+        binding.homeScreenAllTopRatedTv.setOnClickListener {
+            val intent = Intent(this, ScreensActivity::class.java)
+            intent.putExtra("screenType", "Top rated")
+            startActivity(intent)
+        }
+        binding.homeScreenAllUpcomingTv.setOnClickListener {
+            val intent = Intent(this, ScreensActivity::class.java)
+            intent.putExtra("screenType", "Upcoming")
+            startActivity(intent)
+        }
         val popularMoviesService: PopularMoviesService = RetrofitClient.service
         val popularMoviesRepository = PopularMoviesRepository(popularMoviesService)
         popularMoviesViewModel = ViewModelProvider(
