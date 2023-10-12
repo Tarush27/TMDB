@@ -1,5 +1,6 @@
 package com.example.tmdb.adapter
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.tmdb.databinding.HomeScreenPopularMovieSectionItemBinding
 import com.example.tmdb.model.PopularMoviesModel
+import com.example.tmdb.ui.DetailsScreen
 import java.io.File
 
 class PopularMoviesAdapter :
@@ -35,14 +37,16 @@ class PopularMoviesAdapter :
             with(popularMovie) {
                 binding.popularMovieTv.text = this.popularMovieTitle
                 binding.popularMovieIv.load("$posterPath${this.posterPath}")
-                Log.d("adapter", "onBindViewHolder:$posterPath${this.posterPath} ")
+                binding.popularMoviesMcv.setOnClickListener {
+                    it.context.startActivity(Intent(it.context, DetailsScreen::class.java))
+                }
             }
         }
 
     }
 
     fun updatePopularMoviesList(updatedPopularMovies: ArrayList<PopularMoviesModel>) {
-        popularMovies.addAll(updatedPopularMovies.subList(0,10))
+        popularMovies.addAll(updatedPopularMovies.subList(0, 10))
         notifyDataSetChanged()
     }
 }

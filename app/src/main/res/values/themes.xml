@@ -5,5 +5,14 @@
         <item name="android:fitsSystemWindows">true</item>
     </style>
 
+    <style name="Base.Theme.TMDB.DetailsScreen" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
     <style name="Theme.TMDB" parent="Base.Theme.TMDB" />
+
+    <style name="Theme.TMDB.DetailsScreen" parent="Base.Theme.TMDB.DetailsScreen" />
+
 </resources>
