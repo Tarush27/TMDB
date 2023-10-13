@@ -65,26 +65,26 @@ class HomeScreenActivity : BaseThemeActivity() {
         setupTrendingTVShowsDayWeekRv()
         popularMoviesViewModel.getPopularMoviesResponse.observe(this) { response ->
             val popularMovies = response.popularMovies
-            Log.d("HSA", "popularMovies:$popularMovies")
+            Log.d("HSApopular", "popularMovies:$popularMovies")
             popularMoviesAdapter.updatePopularMoviesList(popularMovies)
         }
         popularMoviesViewModel.getTopRatedMoviesResponse.observe(this) { response ->
             val topRatedMovies = response.popularMovies
-            Log.d("HSA", "topRatedMovies:$topRatedMovies")
+            Log.d("HSAtoprated", "topRatedMovies:$topRatedMovies")
             topRatedMoviesAdapter.updateTopRatedMoviesList(topRatedMovies)
 
         }
 
         popularMoviesViewModel.getUpComingMovies.observe(this) { response ->
             val upComingMovies = response.popularMovies
-            Log.d("HSA", "upComingMovies:$upComingMovies")
+            Log.d("HSAupcoming", "upComingMovies:$upComingMovies")
             upComingMoviesAdapter.updateUpcomingMoviesList(upComingMovies)
 
         }
 
         popularMoviesViewModel.getTrendingMovies.observe(this) { response ->
             val trendingMovies = response.popularMovies
-            Log.d("HSAtrending", "trendingMovies:$trendingMovies")
+            Log.d("HSAtrendingmovies", "trendingMovies:$trendingMovies")
             trendingMoviesAdapter.updateTrendingMoviesList(trendingMovies)
 
         }

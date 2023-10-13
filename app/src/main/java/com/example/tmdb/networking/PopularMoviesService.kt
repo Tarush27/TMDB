@@ -1,5 +1,6 @@
 package com.example.tmdb.networking
 
+import com.example.tmdb.model.DetailsResponse
 import com.example.tmdb.model.PopularMoviesResponse
 import com.example.tmdb.model.TrendingTVShowsResponse
 import retrofit2.Call
@@ -22,6 +23,9 @@ interface PopularMoviesService {
 
     @GET("trending/tv/{time_window}?api_key=1f590be8f881ebce14b4088e08124d84")
     fun getTrendingTVShowsResponse(@Path("time_window") time_window: String): Call<TrendingTVShowsResponse>
+
+    @GET("movie/{movie_id}?api_key=1f590be8f881ebce14b4088e08124d84")
+    fun getMoviesDetails(@Path("movie_id") movie_id: Int): Call<DetailsResponse>
 
 
 }

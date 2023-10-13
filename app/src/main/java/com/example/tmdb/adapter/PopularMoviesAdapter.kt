@@ -1,6 +1,7 @@
 package com.example.tmdb.adapter
 
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -38,7 +39,12 @@ class PopularMoviesAdapter :
                 binding.popularMovieTv.text = this.popularMovieTitle
                 binding.popularMovieIv.load("$posterPath${this.posterPath}")
                 binding.popularMoviesMcv.setOnClickListener {
-                    it.context.startActivity(Intent(it.context, DetailsScreen::class.java))
+                    val bundle = Bundle()
+                    bundle.putInt("movie_id", this.popularMovieId!!)
+                    val detailsIntent = Intent(it.context, DetailsScreen::class.java)
+                    detailsIntent.putExtras(bundle)
+                    Log.d("pma", "detailsIntent: $detailsIntent")
+                    it.context.startActivity(detailsIntent)
                 }
             }
         }
