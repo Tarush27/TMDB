@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.tmdb.model.DetailsResponse
 import com.example.tmdb.model.PopularMoviesResponse
+import com.example.tmdb.model.TrendingTVShowsDetailsResponse
 import com.example.tmdb.model.TrendingTVShowsResponse
 import com.example.tmdb.networking.PopularMoviesService
 import retrofit2.Call
@@ -29,6 +30,11 @@ class PopularMoviesRepository(private val popularMoviesService: PopularMoviesSer
 
     private val _movieDetailsResponse = MutableLiveData<DetailsResponse>()
     val movieDetailsResponse: LiveData<DetailsResponse> = _movieDetailsResponse
+
+    private val _trendingTVShowsDetailsResponse = MutableLiveData<TrendingTVShowsDetailsResponse>()
+    val trendingTVShowsDetailsResponse: LiveData<TrendingTVShowsDetailsResponse> =
+        _trendingTVShowsDetailsResponse
+
     fun getPopularMovies() {
         val response: Call<PopularMoviesResponse> = popularMoviesService.getPopularMoviesResponse()
         response.enqueue(object : Callback<PopularMoviesResponse> {
@@ -136,6 +142,25 @@ class PopularMoviesRepository(private val popularMoviesService: PopularMoviesSer
             }
 
             override fun onFailure(call: Call<DetailsResponse>, t: Throwable) {
+                Log.d("repo", t.message.toString())
+            }
+
+        })
+    }
+
+    fun getTrendingTVShowsDetails(id: Int) {
+        val response: Call<TrendingTVShowsDetailsResponse> =
+            popularMoviesService.getTrendingTvShowsDetails(id)
+        response.enqueue(object : Callback<TrendingTVShowsDetailsResponse> {
+            override fun onResponse(
+                call: Call<TrendingTVShowsDetailsResponse>,
+                response: Response<TrendingTVShowsDetailsResponse>
+            ) {
+                _trendingTVShowsDetailsResponse.value = response.body()
+                Log.d("repo", "trendingtvshowsdetails: ${response.body()}")
+            }
+
+            override fun onFailure(call: Call<TrendingTVShowsDetailsResponse>, t: Throwable) {
                 Log.d("repo", t.message.toString())
             }
 

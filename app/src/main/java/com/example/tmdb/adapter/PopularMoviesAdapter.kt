@@ -43,7 +43,7 @@ class PopularMoviesAdapter :
                     bundle.putInt("movie_id", this.popularMovieId!!)
                     val detailsIntent = Intent(it.context, DetailsScreen::class.java)
                     detailsIntent.putExtras(bundle)
-                    Log.d("pma", "detailsIntent: $detailsIntent")
+                    Log.d("popmovadapter", "detailsIntent: $detailsIntent")
                     it.context.startActivity(detailsIntent)
                 }
             }

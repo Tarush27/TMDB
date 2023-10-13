@@ -1,5 +1,7 @@
 package com.example.tmdb.adapter
 
+import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.tmdb.databinding.SingleTrendingMovieDayWeekBinding
 import com.example.tmdb.model.PopularMoviesModel
+import com.example.tmdb.ui.DetailsScreen
 
 class TrendingMoviesAdapter :
     RecyclerView.Adapter<TrendingMoviesAdapter.TrendingMoviesItemViewHolder>() {
@@ -37,6 +40,14 @@ class TrendingMoviesAdapter :
             with(popularMovie) {
                 binding.trendingMoviesTv.text = this.popularMovieTitle
                 binding.trendingMoviesIv.load("$posterPath${this.posterPath}")
+                binding.trendingMoviesMcv.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putInt("movie_id", this.popularMovieId!!)
+                    val detailsIntent = Intent(it.context, DetailsScreen::class.java)
+                    detailsIntent.putExtras(bundle)
+                    Log.d("trendingmovadapter", "detailsIntent: $detailsIntent")
+                    it.context.startActivity(detailsIntent)
+                }
             }
         }
 

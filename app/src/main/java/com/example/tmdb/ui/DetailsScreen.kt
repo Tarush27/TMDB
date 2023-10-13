@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import coil.load
 import com.example.tmdb.R
 import com.example.tmdb.databinding.DetailsScreenBinding
+import com.example.tmdb.model.TrendingTVShowsDetailsResponse
 import com.example.tmdb.networking.PopularMoviesService
 import com.example.tmdb.networking.RetrofitClient
 import com.example.tmdb.repository.PopularMoviesRepository

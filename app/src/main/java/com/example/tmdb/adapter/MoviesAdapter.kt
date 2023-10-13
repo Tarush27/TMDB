@@ -1,11 +1,15 @@
 package com.example.tmdb.adapter
 
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.tmdb.databinding.ScreensItemBinding
 import com.example.tmdb.model.PopularMoviesModel
+import com.example.tmdb.ui.DetailsScreen
 
 class MoviesAdapter :
     RecyclerView.Adapter<MoviesAdapter.PopularMoviesItemViewHolder>() {
@@ -33,6 +37,14 @@ class MoviesAdapter :
             with(movie) {
                 binding.screensTv.text = this.popularMovieTitle
                 binding.screensIv.load("$posterPath${this.posterPath}")
+                binding.screensMcv.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putInt("movie_id", this.popularMovieId!!)
+                    val detailsIntent = Intent(it.context, DetailsScreen::class.java)
+                    detailsIntent.putExtras(bundle)
+                    Log.d("popmovadapter", "detailsIntent: $detailsIntent")
+                    it.context.startActivity(detailsIntent)
+                }
             }
         }
 
