@@ -1,5 +1,7 @@
 package com.example.tmdb.adapter
 
+import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.tmdb.databinding.HomeScreenUpcomingMoviesSectionItemBinding
 import com.example.tmdb.model.PopularMoviesModel
+import com.example.tmdb.ui.DetailsScreen
 
 class UpcomingMoviesAdapter :
     RecyclerView.Adapter<UpcomingMoviesAdapter.UpcomingMoviesItemViewHolder>() {
@@ -37,7 +40,14 @@ class UpcomingMoviesAdapter :
             with(popularMovie) {
                 binding.upcomingMoviesTv.text = this.popularMovieTitle
                 binding.upcomingMoviesIv.load("$posterPath${this.posterPath}")
-                Log.d("adapter", "onBindViewHolder:$posterPath${this.posterPath} ")
+                binding.upcomingMoviesMcv.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putInt("movie_id", this.popularMovieId!!)
+                    val detailsIntent = Intent(it.context, DetailsScreen::class.java)
+                    detailsIntent.putExtras(bundle)
+                    Log.d("pma", "detailsIntent: $detailsIntent")
+                    it.context.startActivity(detailsIntent)
+                }
             }
         }
 
