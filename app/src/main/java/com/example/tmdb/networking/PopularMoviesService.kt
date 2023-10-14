@@ -1,6 +1,7 @@
 package com.example.tmdb.networking
 
 import com.example.tmdb.model.DetailsResponse
+import com.example.tmdb.model.NowPlayingMoviesResponse
 import com.example.tmdb.model.PopularMoviesResponse
 import com.example.tmdb.model.TrendingTVShowsDetailsResponse
 import com.example.tmdb.model.TrendingTVShowsResponse
@@ -15,6 +16,9 @@ interface PopularMoviesService {
 
     @GET("movie/top_rated?api_key=1f590be8f881ebce14b4088e08124d84")
     fun getTopRatedMoviesResponse(): Call<PopularMoviesResponse>
+
+    @GET("movie/now_playing?api_key=1f590be8f881ebce14b4088e08124d84")
+    fun getNowPlayingMoviesResponse(): Call<NowPlayingMoviesResponse>
 
     @GET("movie/upcoming?api_key=1f590be8f881ebce14b4088e08124d84")
     fun getUpcomingMoviesResponse(): Call<PopularMoviesResponse>

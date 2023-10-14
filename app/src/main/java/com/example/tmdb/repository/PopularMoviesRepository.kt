@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.tmdb.model.DetailsResponse
+import com.example.tmdb.model.NowPlayingMoviesResponse
 import com.example.tmdb.model.PopularMoviesResponse
 import com.example.tmdb.model.TrendingTVShowsDetailsResponse
 import com.example.tmdb.model.TrendingTVShowsResponse
@@ -34,6 +35,10 @@ class PopularMoviesRepository(private val popularMoviesService: PopularMoviesSer
     private val _trendingTVShowsDetailsResponse = MutableLiveData<TrendingTVShowsDetailsResponse>()
     val trendingTVShowsDetailsResponse: LiveData<TrendingTVShowsDetailsResponse> =
         _trendingTVShowsDetailsResponse
+
+    private val _nowPlayingMoviesResponse = MutableLiveData<NowPlayingMoviesResponse>()
+    val nowPlayingMoviesResponse: LiveData<NowPlayingMoviesResponse> =
+        _nowPlayingMoviesResponse
 
     fun getPopularMovies() {
         val response: Call<PopularMoviesResponse> = popularMoviesService.getPopularMoviesResponse()
@@ -161,6 +166,25 @@ class PopularMoviesRepository(private val popularMoviesService: PopularMoviesSer
             }
 
             override fun onFailure(call: Call<TrendingTVShowsDetailsResponse>, t: Throwable) {
+                Log.d("repo", t.message.toString())
+            }
+
+        })
+    }
+
+    fun getNowPlayingMoviesDetails() {
+        val response: Call<NowPlayingMoviesResponse> =
+            popularMoviesService.getNowPlayingMoviesResponse()
+        response.enqueue(object : Callback<NowPlayingMoviesResponse> {
+            override fun onResponse(
+                call: Call<NowPlayingMoviesResponse>,
+                response: Response<NowPlayingMoviesResponse>
+            ) {
+                _nowPlayingMoviesResponse.value = response.body()
+                Log.d("repo", "nowplayingmoviesdetails: ${response.body()}")
+            }
+
+            override fun onFailure(call: Call<NowPlayingMoviesResponse>, t: Throwable) {
                 Log.d("repo", t.message.toString())
             }
 

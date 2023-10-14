@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tmdb.R
+import com.example.tmdb.adapter.NowPlayingMoviesAdapter
 import com.example.tmdb.adapter.PopularMoviesAdapter
 import com.example.tmdb.adapter.TopRatedMoviesAdapter
 import com.example.tmdb.adapter.TrendingMoviesAdapter
@@ -27,6 +28,7 @@ class HomeScreenActivity : BaseThemeActivity() {
     private var upComingMoviesAdapter = UpcomingMoviesAdapter()
     private var trendingMoviesAdapter = TrendingMoviesAdapter()
     private var trendingTVShowsAdapter = TrendingTVShowsAdapter()
+    private var nowPlayingMoviesAdapter = NowPlayingMoviesAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = HomeScreenActivityBinding.inflate(layoutInflater)
@@ -63,6 +65,7 @@ class HomeScreenActivity : BaseThemeActivity() {
         setupUpcomingMoviesRv()
         setupTrendingMoviesDayWeekRv()
         setupTrendingTVShowsDayWeekRv()
+        setupNowPlayingMoviesRv()
         popularMoviesViewModel.getPopularMoviesResponse.observe(this) { response ->
             val popularMovies = response.popularMovies
             Log.d("HSApopular", "popularMovies:$popularMovies")
@@ -79,6 +82,13 @@ class HomeScreenActivity : BaseThemeActivity() {
             val upComingMovies = response.popularMovies
             Log.d("HSAupcoming", "upComingMovies:$upComingMovies")
             upComingMoviesAdapter.updateUpcomingMoviesList(upComingMovies)
+
+        }
+
+        popularMoviesViewModel.getNowPlayingMoviesDetails.observe(this) { response ->
+            val nowPlayingMovies = response.nowPlayingMovies
+            Log.d("HSAnowplayingmov", "nowplayingmov:$nowPlayingMovies")
+            nowPlayingMoviesAdapter.updateNowPlayingMoviesList(nowPlayingMovies)
 
         }
 
@@ -131,6 +141,7 @@ class HomeScreenActivity : BaseThemeActivity() {
         popularMoviesViewModel.getTopRatedMovies()
         popularMoviesViewModel.getPopularMovies()
         popularMoviesViewModel.getUpComingMovies()
+        popularMoviesViewModel.getNowPlayingMoviesDetails()
 
     }
 
@@ -184,5 +195,16 @@ class HomeScreenActivity : BaseThemeActivity() {
         )
 
         binding.trendingTVShowsHorizontalRv.adapter = trendingTVShowsAdapter
+    }
+
+    private fun setupNowPlayingMoviesRv() {
+        nowPlayingMoviesAdapter = NowPlayingMoviesAdapter()
+        binding.nowPlayingMoviesHorizontalRv.layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+        binding.nowPlayingMoviesHorizontalRv.adapter = nowPlayingMoviesAdapter
     }
 }

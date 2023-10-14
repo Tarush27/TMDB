@@ -51,4 +51,8 @@ class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesR
     }
 
     val getTrendingTvShowsDetails = popularMoviesRepository.trendingTVShowsDetailsResponse
+
+    fun getNowPlayingMoviesDetails() = popularMoviesRepository.getNowPlayingMoviesDetails()
+
+    val getNowPlayingMoviesDetails = popularMoviesRepository.nowPlayingMoviesResponse
 }
