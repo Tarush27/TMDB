@@ -7,12 +7,10 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tmdb.R
+import com.example.tmdb.adapter.HomeScreenMoviesAdapter
 import com.example.tmdb.adapter.NowPlayingMoviesAdapter
-import com.example.tmdb.adapter.PopularMoviesAdapter
-import com.example.tmdb.adapter.TopRatedMoviesAdapter
 import com.example.tmdb.adapter.TrendingMoviesAdapter
 import com.example.tmdb.adapter.TrendingTVShowsAdapter
-import com.example.tmdb.adapter.UpcomingMoviesAdapter
 import com.example.tmdb.databinding.HomeScreenActivityBinding
 import com.example.tmdb.networking.PopularMoviesService
 import com.example.tmdb.networking.RetrofitClient
@@ -23,10 +21,8 @@ import com.example.tmdb.viewModel.PopularMoviesViewModelFactory
 class HomeScreenActivity : BaseThemeActivity() {
     private lateinit var popularMoviesViewModel: PopularMoviesViewModel
     private lateinit var binding: HomeScreenActivityBinding
-    private var popularMoviesAdapter = PopularMoviesAdapter()
-    private var topRatedMoviesAdapter = TopRatedMoviesAdapter()
-    private var upComingMoviesAdapter = UpcomingMoviesAdapter()
     private var trendingMoviesAdapter = TrendingMoviesAdapter()
+    private var homeScreenMoviesAdapter = HomeScreenMoviesAdapter()
     private var trendingTVShowsAdapter = TrendingTVShowsAdapter()
     private var nowPlayingMoviesAdapter = NowPlayingMoviesAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,29 +56,27 @@ class HomeScreenActivity : BaseThemeActivity() {
             title = context.getString(R.string.home_screen_toolbar_title)
             menuInflater.inflate(R.menu.search_menu, menu)
         }
-        setupPopularMoviesRv()
-        setupTopRatedMoviesRv()
-        setupUpcomingMoviesRv()
         setupTrendingMoviesDayWeekRv()
         setupTrendingTVShowsDayWeekRv()
         setupNowPlayingMoviesRv()
         popularMoviesViewModel.getPopularMoviesResponse.observe(this) { response ->
+            setupPopularMoviesRv()
             val popularMovies = response.popularMovies
             Log.d("HSApopular", "popularMovies:$popularMovies")
-            popularMoviesAdapter.updatePopularMoviesList(popularMovies)
+            homeScreenMoviesAdapter.updateHomeScreenMoviesList(popularMovies)
         }
         popularMoviesViewModel.getTopRatedMoviesResponse.observe(this) { response ->
+            setupTopRatedMoviesRv()
             val topRatedMovies = response.popularMovies
             Log.d("HSAtoprated", "topRatedMovies:$topRatedMovies")
-            topRatedMoviesAdapter.updateTopRatedMoviesList(topRatedMovies)
-
+            homeScreenMoviesAdapter.updateHomeScreenMoviesList(topRatedMovies)
         }
 
         popularMoviesViewModel.getUpComingMovies.observe(this) { response ->
+            setupUpcomingMoviesRv()
             val upComingMovies = response.popularMovies
             Log.d("HSAupcoming", "upComingMovies:$upComingMovies")
-            upComingMoviesAdapter.updateUpcomingMoviesList(upComingMovies)
-
+            homeScreenMoviesAdapter.updateHomeScreenMoviesList(upComingMovies)
         }
 
         popularMoviesViewModel.getNowPlayingMoviesDetails.observe(this) { response ->
@@ -146,33 +140,36 @@ class HomeScreenActivity : BaseThemeActivity() {
     }
 
     private fun setupPopularMoviesRv() {
+        homeScreenMoviesAdapter = HomeScreenMoviesAdapter()
         binding.popularMoviesHorizontalRv.layoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.HORIZONTAL,
             false
         )
 
-        binding.popularMoviesHorizontalRv.adapter = popularMoviesAdapter
+        binding.popularMoviesHorizontalRv.adapter = homeScreenMoviesAdapter
     }
 
     private fun setupTopRatedMoviesRv() {
+        homeScreenMoviesAdapter = HomeScreenMoviesAdapter()
         binding.topRatedMoviesHorizontalRv.layoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.HORIZONTAL,
             false
         )
 
-        binding.topRatedMoviesHorizontalRv.adapter = topRatedMoviesAdapter
+        binding.topRatedMoviesHorizontalRv.adapter = homeScreenMoviesAdapter
     }
 
     private fun setupUpcomingMoviesRv() {
+        homeScreenMoviesAdapter = HomeScreenMoviesAdapter()
         binding.upcomingMoviesHorizontalRv.layoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.HORIZONTAL,
             false
         )
 
-        binding.upcomingMoviesHorizontalRv.adapter = upComingMoviesAdapter
+        binding.upcomingMoviesHorizontalRv.adapter = homeScreenMoviesAdapter
     }
 
     private fun setupTrendingMoviesDayWeekRv() {
