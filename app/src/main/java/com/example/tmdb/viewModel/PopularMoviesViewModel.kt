@@ -17,20 +17,20 @@ import com.example.tmdb.repository.PopularMoviesRepository
 class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesRepository) :
     ViewModel() {
 
-    fun getPopularMovies(page: Int) = popularMoviesRepository.getPopularMovies(page)
-    val getPopularMoviesResponse = popularMoviesRepository.popularMoviesResponse
-
+//    fun getPopularMovies(page: Int) = popularMoviesRepository.getPopularMovies(page)
+//    val getPopularMoviesResponse = popularMoviesRepository.popularMoviesResponse
+//
 //    fun getPopularMovieList(): LiveData<PagingData<PopularMoviesModel>> {
 //        return popularMoviesRepository.getPopularMovies().cachedIn(viewModelScope)
 //    }
-
+//
 //    val popularMoviesList = popularMoviesRepository.getPopularMovies().cachedIn(viewModelScope)
-
+//
 //    fun getPopularMoviesList(): LiveData<PagingData<PopularMoviesModel>> {
 //        return popularMoviesRepository.getAllPopularMovies().cachedIn(viewModelScope)
 //    }
-
-    //    val popularMoviesList = popularMoviesRepository.getPopularMovies().cachedIn(viewModelScope)
+//
+//        val popularMoviesList = popularMoviesRepository.getPopularMovies().cachedIn(viewModelScope)
     fun getTopRatedMovies() = popularMoviesRepository.getTopRatedMovies()
     val getTopRatedMoviesResponse = popularMoviesRepository.topRatedMoviesResponse
 
@@ -60,13 +60,13 @@ class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesR
 
     val getTrendingTVShows = popularMoviesRepository.trendingTVShowsResponse
 
-//    fun getMoviesDetails(id: Int) {
-//        popularMoviesRepository.getMoviesDetails(id)
-//    }
+    fun getMoviesDetails(id: Int) {
+        popularMoviesRepository.getMoviesDetails(id)
+    }
 
-    val popularMoviesList: LiveData<PagingData<PopularMoviesModel>> = Pager(PagingConfig(1)) {
+    val popularMoviesList: LiveData<PagingData<PopularMoviesModel>> = Pager(PagingConfig(pageSize = 1, enablePlaceholders = false), initialKey = 1) {
         ScreensPagingSource(popularMoviesRepository)
-    }.liveData.cachedIn(viewModelScope)
+    }.liveData
 
     val getMoviesDetails = popularMoviesRepository.movieDetailsResponse
 

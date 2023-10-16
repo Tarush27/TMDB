@@ -1,9 +1,13 @@
 package com.example.tmdb.ui
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.tmdb.R
 import com.example.tmdb.Utils.ScreenTypes
@@ -15,6 +19,7 @@ import com.example.tmdb.networking.RetrofitClient
 import com.example.tmdb.repository.PopularMoviesRepository
 import com.example.tmdb.viewModel.PopularMoviesViewModel
 import com.example.tmdb.viewModel.PopularMoviesViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 class ScreensActivity : BaseThemeActivity() {
@@ -44,6 +49,8 @@ class ScreensActivity : BaseThemeActivity() {
                     }
                 }
                 setupPopularMoviesRv()
+
+
 //                popularMoviesViewModel.getPopularMoviesResponse.observe(this) { response ->
 //                    val popularMovies = response.popularMovies
 //                    Log.d("SA", "popularMovies:$popularMovies")
@@ -51,11 +58,39 @@ class ScreensActivity : BaseThemeActivity() {
 //                }
 //                popularMoviesViewModel.getPopularMovieList()
 
-//                lifecycleScope.launch {
-//                    popularMoviesViewModel.popularMoviesList.observe(this@ScreensActivity) {
-//                        moviesPagingAdapter.submitData(lifecycle, it)
-//                    }
-//                }
+                lifecycleScope.launch {
+                    popularMoviesViewModel.popularMoviesList.observe(this@ScreensActivity) {
+                        moviesPagingAdapter.submitData(lifecycle, it)
+                        /*moviesPagingAdapter.addLoadStateListener { loadState ->
+                            // show empty list
+                            if (loadState.refresh is LoadState.Loading ||
+                                loadState.append is LoadState.Loading
+                            )
+                                binding.prependProgress.isVisible = true
+                            else {
+                                binding.prependProgress.isVisible = false
+                                // If we have an error, show a toast
+                                val errorState = when {
+                                    loadState.append is LoadState.Error -> loadState.append as LoadState.Error
+                                    loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
+                                    loadState.refresh is LoadState.Error -> loadState.refresh as LoadState.Error
+                                    else -> null
+                                }
+                                errorState?.let {
+                                    val errorSnackBar =
+                                        Snackbar.make(
+                                            binding.root,
+                                            it.error.toString(),
+                                            Snackbar.LENGTH_LONG
+                                        )
+                                    errorSnackBar.show()
+
+                                }
+
+                            }
+                        }*/
+                    }
+                }
             }
 
 //            ScreenTypes.TOP_RATED.topRatedScreen() -> {
@@ -103,6 +138,34 @@ class ScreensActivity : BaseThemeActivity() {
     private fun setupPopularMoviesRv() {
 //        moviesAdapter = MoviesAdapter()
         moviesPagingAdapter = MoviesPagingAdapter()
+        /*moviesPagingAdapter.addLoadStateListener { loadState ->
+            // show empty list
+            if (loadState.refresh is LoadState.Loading ||
+                loadState.append is LoadState.Loading
+            )
+                binding.prependProgress.isVisible = true
+            else {
+                binding.prependProgress.isVisible = false
+                // If we have an error, show a toast
+                val errorState = when {
+                    loadState.append is LoadState.Error -> loadState.append as LoadState.Error
+                    loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
+                    loadState.refresh is LoadState.Error -> loadState.refresh as LoadState.Error
+                    else -> null
+                }
+                errorState?.let {
+                    val errorSnackBar =
+                        Snackbar.make(
+                            binding.root,
+                            it.error.toString(),
+                            Snackbar.LENGTH_LONG
+                        )
+                    errorSnackBar.show()
+
+                }
+
+            }
+        }*/
         binding.screensHorizontalRv.layoutManager = GridLayoutManager(this, 2)
 
         binding.screensHorizontalRv.adapter = moviesPagingAdapter

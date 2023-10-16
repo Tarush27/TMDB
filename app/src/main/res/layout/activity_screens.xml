@@ -32,10 +32,19 @@
                 android:layout_margin="15dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:spanCount="2"
                 tools:itemCount="2"
                 tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                tools:listitem="@layout/screens_item" />
+                tools:listitem="@layout/screens_item"
+                tools:spanCount="2" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/prepend_progress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -61,7 +61,7 @@ class PopularMoviesRepository(private val popularMoviesService: PopularMoviesSer
 //        Log.d("repo", "getPopularMovies:$response")
 //    }
 
-    fun getPopularMovies(page: Int) = popularMoviesService.getPopularMoviesResponse(page)
+    suspend fun getPopularMovies(page: Int) = popularMoviesService.getPopularMoviesResponse(page)
 //        val response: Call<PopularMoviesResponse> = popularMoviesService.getPopularMoviesResponse(page)
 //        response.enqueue(object : Callback<PopularMoviesResponse> {
 //            override fun onResponse(
