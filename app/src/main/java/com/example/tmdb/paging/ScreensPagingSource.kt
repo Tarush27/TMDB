@@ -14,7 +14,7 @@ class ScreensPagingSource(private val popularMoviesRepository: PopularMoviesRepo
             Log.d("screenspagingsource", "load: $params")
             val currentPage = params.key ?: 1
             val initialPageSize = 3 * currentPage
-            val response = popularMoviesRepository.getPopularMovies(initialPageSize)
+            val response = popularMoviesRepository.getPopularMoviesPerPage(initialPageSize)
             val data = response.body()!!.popularMovies
             val responseData = mutableListOf<PopularMoviesModel>()
             responseData.addAll(data)
