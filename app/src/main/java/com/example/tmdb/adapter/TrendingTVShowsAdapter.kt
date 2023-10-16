@@ -11,6 +11,7 @@ import com.example.tmdb.databinding.SingleTrendingTvShowsDayWeekBinding
 import com.example.tmdb.model.PopularMoviesModel
 import com.example.tmdb.model.TrendingTVShowsModel
 import com.example.tmdb.ui.DetailsScreen
+import com.example.tmdb.ui.TrendingTvShowsDetailsScreen
 
 class TrendingTVShowsAdapter :
     RecyclerView.Adapter<TrendingTVShowsAdapter.TrendingTVShowsItemViewHolder>() {
@@ -44,7 +45,7 @@ class TrendingTVShowsAdapter :
                 binding.trendingTVShowsMcv.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putInt("trending_tv_show_id", this.trendingTVShowId!!)
-                    val detailsIntent = Intent(it.context, DetailsScreen::class.java)
+                    val detailsIntent = Intent(it.context, TrendingTvShowsDetailsScreen::class.java)
                     detailsIntent.putExtras(bundle)
                     Log.d("trendingtvshowsadapter", "detailsIntent: $detailsIntent")
                     it.context.startActivity(detailsIntent)

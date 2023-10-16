@@ -15,9 +15,12 @@
         android:theme="@style/Theme.TMDB"
         tools:targetApi="31">
         <activity
-            android:name=".ui.DetailsScreen"
-            android:theme="@style/Theme.TMDB.DetailsScreen"
+            android:name=".ui.TrendingTvShowsDetailsScreen"
             android:exported="false" />
+        <activity
+            android:name=".ui.DetailsScreen"
+            android:exported="false"
+            android:theme="@style/Theme.TMDB.DetailsScreen" />
         <activity
             android:name=".ui.ScreensActivity"
             android:exported="false" />
