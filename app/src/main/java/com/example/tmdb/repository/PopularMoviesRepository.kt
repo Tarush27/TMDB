@@ -40,23 +40,65 @@ class PopularMoviesRepository(private val popularMoviesService: PopularMoviesSer
     val nowPlayingMoviesResponse: LiveData<NowPlayingMoviesResponse> =
         _nowPlayingMoviesResponse
 
-    fun getPopularMovies() {
-        val response: Call<PopularMoviesResponse> = popularMoviesService.getPopularMoviesResponse()
-        response.enqueue(object : Callback<PopularMoviesResponse> {
-            override fun onResponse(
-                call: Call<PopularMoviesResponse>,
-                response: Response<PopularMoviesResponse>
-            ) {
-                _popularMoviesResponse.value = response.body()
-                Log.d("repo", "popmov: $response")
-            }
+//    fun getPopularMovies(page: Int) {
+//        val response: Call<PopularMoviesResponse> = popularMoviesService.getPopularMoviesResponse(page)
+//        response.enqueue(object : Callback<PopularMoviesResponse> {
+//            override fun onResponse(
+//                call: Call<PopularMoviesResponse>,
+//                response: Response<PopularMoviesResponse>
+//            ) {
+//                _popularMoviesResponse.value = response.body()
+//                Log.d("repo", "popmov: $response")
+//            }
+//
+//            override fun onFailure(call: Call<PopularMoviesResponse>, t: Throwable) {
+//                Log.d("repo", t.message.toString())
+//            }
+//
+//        })
+//        val response = popularMoviesService.getPopularMoviesResponse(page)
+//        _popularMoviesResponse.value = response.body()
+//        Log.d("repo", "getPopularMovies:$response")
+//    }
 
-            override fun onFailure(call: Call<PopularMoviesResponse>, t: Throwable) {
-                Log.d("repo", t.message.toString())
-            }
+    fun getPopularMovies(page: Int) = popularMoviesService.getPopularMoviesResponse(page)
+//        val response: Call<PopularMoviesResponse> = popularMoviesService.getPopularMoviesResponse(page)
+//        response.enqueue(object : Callback<PopularMoviesResponse> {
+//            override fun onResponse(
+//                call: Call<PopularMoviesResponse>,
+//                response: Response<PopularMoviesResponse>
+//            ) {
+//                _popularMoviesResponse.value = response.body()
+//                Log.d("repo", "popmov: $response")
+//            }
+//
+//            override fun onFailure(call: Call<PopularMoviesResponse>, t: Throwable) {
+//                Log.d("repo", t.message.toString())
+//            }
+//
+//        })
 
-        })
-    }
+
+//    fun getPopularMovies() = Pager(
+//        config = PagingConfig(
+//            pageSize = 20
+//        ),
+//        pagingSourceFactory = {
+//            ScreensPagingSource(popularMoviesService)
+//        }
+//    ).liveData
+
+//    fun getAllPopularMovies(): LiveData<PagingData<PopularMoviesModel>> {
+//
+//        return Pager(
+//            config = PagingConfig(
+//                pageSize = 10
+//            ),
+//            pagingSourceFactory = {
+//                ScreensPagingSource(popularMoviesService)
+//            }
+//        ).liveData
+//    }
 
     fun getTopRatedMovies() {
         val response: Call<PopularMoviesResponse> = popularMoviesService.getTopRatedMoviesResponse()

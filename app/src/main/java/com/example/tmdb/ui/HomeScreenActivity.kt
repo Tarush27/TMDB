@@ -59,12 +59,12 @@ class HomeScreenActivity : BaseThemeActivity() {
         setupTrendingMoviesDayWeekRv()
         setupTrendingTVShowsDayWeekRv()
         setupNowPlayingMoviesRv()
-        popularMoviesViewModel.getPopularMoviesResponse.observe(this) { response ->
-            setupPopularMoviesRv()
-            val popularMovies = response.popularMovies
-            Log.d("HSApopular", "popularMovies:$popularMovies")
-            homeScreenMoviesAdapter.updateHomeScreenMoviesList(popularMovies)
-        }
+//        popularMoviesViewModel.getPopularMoviesResponse.observe(this) { response ->
+//            setupPopularMoviesRv()
+//            val popularMovies = response.popularMovies
+//            Log.d("HSApopular", "popularMovies:$popularMovies")
+//            homeScreenMoviesAdapter.updateHomeScreenMoviesList(popularMovies)
+//        }
         popularMoviesViewModel.getTopRatedMoviesResponse.observe(this) { response ->
             setupTopRatedMoviesRv()
             val topRatedMovies = response.popularMovies
@@ -133,7 +133,7 @@ class HomeScreenActivity : BaseThemeActivity() {
         }
 
         popularMoviesViewModel.getTopRatedMovies()
-        popularMoviesViewModel.getPopularMovies()
+//        popularMoviesViewModel.getPopularMovies(1)
         popularMoviesViewModel.getUpComingMovies()
         popularMoviesViewModel.getNowPlayingMoviesDetails()
 
