@@ -1,6 +1,6 @@
 package com.example.tmdb.networking
 
-import com.example.tmdb.Utils.API_ACCESS_TOKEN
+import com.example.tmdb.utils.API_ACCESS_TOKEN
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor

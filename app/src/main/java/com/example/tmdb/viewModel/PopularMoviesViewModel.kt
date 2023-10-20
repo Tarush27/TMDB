@@ -1,18 +1,13 @@
 package com.example.tmdb.viewModel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.liveData
-import com.example.tmdb.Utils.TimeWindow
-import com.example.tmdb.Utils.stringAbc
-import com.example.tmdb.model.PopularMoviesModel
 import com.example.tmdb.paging.ScreensPagingSource
 import com.example.tmdb.repository.PopularMoviesRepository
+import com.example.tmdb.utils.TimeWindow
+import com.example.tmdb.utils.stringAbc
 import kotlinx.coroutines.launch
 
 class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesRepository) :
@@ -58,10 +53,10 @@ class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesR
         popularMoviesRepository.getMoviesDetails(id)
     }
 
-    val popularMoviesList: LiveData<PagingData<PopularMoviesModel>> =
-        Pager(PagingConfig(pageSize = 1, enablePlaceholders = false), initialKey = 1) {
+    val popularMoviesList =
+        Pager(PagingConfig(pageSize = 20, enablePlaceholders = false)) {
             ScreensPagingSource(popularMoviesRepository)
-        }.liveData
+        }.flow
 
     val getMoviesDetails = popularMoviesRepository.movieDetailsResponse
 

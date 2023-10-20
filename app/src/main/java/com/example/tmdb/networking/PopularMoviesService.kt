@@ -5,6 +5,7 @@ import com.example.tmdb.model.NowPlayingMoviesResponse
 import com.example.tmdb.model.PopularMoviesResponse
 import com.example.tmdb.model.TrendingTVShowsDetailsResponse
 import com.example.tmdb.model.TrendingTVShowsResponse
+import com.example.tmdb.utils.API_KEY
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET

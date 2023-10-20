@@ -58,7 +58,7 @@ class MoviesPagingAdapter :
             newItem: PopularMoviesModel
         ): Boolean {
             // Id is unique.
-            return oldItem.popularMovieTitle == newItem.popularMovieTitle
+            return oldItem.popularMovieId == newItem.popularMovieId
         }
 
         override fun areContentsTheSame(
