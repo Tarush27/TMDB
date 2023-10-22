@@ -58,6 +58,15 @@ class PopularMoviesRepository(private val popularMoviesService: PopularMoviesSer
         })
     }
 
+    suspend fun getPopularMoviesPerPage(page: Int) =
+        popularMoviesService.getPopularMoviesResponsePerPage(page)
+
+    suspend fun getTopRatedMoviesPerPage(page: Int) =
+        popularMoviesService.getTopRatedMoviesResponsePerPage(page)
+
+    suspend fun getUpcomingMoviesPerPage(page: Int) =
+        popularMoviesService.getUpcomingMoviesResponsePerPage(page)
+
     fun getTopRatedMovies() {
         val response: Call<PopularMoviesResponse> = popularMoviesService.getTopRatedMoviesResponse()
         response.enqueue(object : Callback<PopularMoviesResponse> {

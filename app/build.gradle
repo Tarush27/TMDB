@@ -53,9 +53,17 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("io.coil-kt:coil:2.4.0")
+
+    implementation "androidx.paging:paging-runtime:3.2.1"
+    implementation "androidx.paging:paging-common:3.2.1"
+    implementation "androidx.paging:paging-runtime-ktx:3.2.1"
+    implementation "androidx.paging:paging-common-ktx:3.2.1"
+    implementation "com.google.dagger:hilt-android:2.44"
+
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-config-ktx")
+
 
 }

@@ -1,4 +1,4 @@
-package com.example.tmdb.Utils
+package com.example.tmdb.utils
 
 enum class ScreenTypes {
     POPULAR, TOP_RATED, UPCOMING

@@ -12,6 +12,7 @@ import com.example.tmdb.adapter.NowPlayingMoviesAdapter
 import com.example.tmdb.adapter.TrendingMoviesAdapter
 import com.example.tmdb.adapter.TrendingTVShowsAdapter
 import com.example.tmdb.databinding.HomeScreenActivityBinding
+import com.example.tmdb.model.PopularMoviesModel
 import com.example.tmdb.networking.PopularMoviesService
 import com.example.tmdb.networking.RetrofitClient
 import com.example.tmdb.repository.PopularMoviesRepository
@@ -64,20 +65,20 @@ class HomeScreenActivity : BaseThemeActivity() {
             setupPopularMoviesRv()
             val popularMovies = response.popularMovies
             Log.d("HSApopular", "popularMovies:$popularMovies")
-            homeScreenMoviesAdapter.updateHomeScreenMoviesList(popularMovies)
+            homeScreenMoviesAdapter.updateHomeScreenMoviesList(popularMovies as ArrayList<PopularMoviesModel>)
         }
         popularMoviesViewModel.getTopRatedMoviesResponse.observe(this) { response ->
             setupTopRatedMoviesRv()
             val topRatedMovies = response.popularMovies
             Log.d("HSAtoprated", "topRatedMovies:$topRatedMovies")
-            homeScreenMoviesAdapter.updateHomeScreenMoviesList(topRatedMovies)
+            homeScreenMoviesAdapter.updateHomeScreenMoviesList(topRatedMovies as ArrayList<PopularMoviesModel>)
         }
 
         popularMoviesViewModel.getUpComingMovies.observe(this) { response ->
             setupUpcomingMoviesRv()
             val upComingMovies = response.popularMovies
             Log.d("HSAupcoming", "upComingMovies:$upComingMovies")
-            homeScreenMoviesAdapter.updateHomeScreenMoviesList(upComingMovies)
+            homeScreenMoviesAdapter.updateHomeScreenMoviesList(upComingMovies as ArrayList<PopularMoviesModel>)
         }
 
         popularMoviesViewModel.getNowPlayingMoviesDetails.observe(this) { response ->
@@ -90,7 +91,7 @@ class HomeScreenActivity : BaseThemeActivity() {
         popularMoviesViewModel.getTrendingMovies.observe(this) { response ->
             val trendingMovies = response.popularMovies
             Log.d("HSAtrendingmovies", "trendingMovies:$trendingMovies")
-            trendingMoviesAdapter.updateTrendingMoviesList(trendingMovies)
+            trendingMoviesAdapter.updateTrendingMoviesList(trendingMovies as ArrayList<PopularMoviesModel>)
 
         }
 
@@ -100,12 +101,12 @@ class HomeScreenActivity : BaseThemeActivity() {
                 binding.trendingMoviesDayWeekSwitch.textOn = "Week"
                 popularMoviesViewModel.getTrendingMovies(true)
                 popularMoviesViewModel.getTrendingMovies.observe(this) {
-                    trendingMoviesAdapter.updateTrendingMoviesList(it.popularMovies)
+                    trendingMoviesAdapter.updateTrendingMoviesList(it.popularMovies as ArrayList<PopularMoviesModel>)
                 }
             } else {
                 popularMoviesViewModel.getTrendingMovies(false)
                 popularMoviesViewModel.getTrendingMovies.observe(this) {
-                    trendingMoviesAdapter.updateTrendingMoviesList(it.popularMovies)
+                    trendingMoviesAdapter.updateTrendingMoviesList(it.popularMovies as ArrayList<PopularMoviesModel>)
                 }
             }
         }
