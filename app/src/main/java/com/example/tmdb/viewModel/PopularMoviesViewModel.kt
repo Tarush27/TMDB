@@ -6,6 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.example.tmdb.paging.ScreensPagingSource
 import com.example.tmdb.repository.PopularMoviesRepository
+import com.example.tmdb.utils.ScreenTypes
 import com.example.tmdb.utils.TimeWindow
 import com.example.tmdb.utils.stringAbc
 import kotlinx.coroutines.launch
@@ -54,8 +55,18 @@ class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesR
     }
 
     val popularMoviesList =
-        Pager(PagingConfig(pageSize = 20, enablePlaceholders = false)) {
-            ScreensPagingSource(popularMoviesRepository)
+        Pager(PagingConfig(pageSize = 1, enablePlaceholders = false)) {
+            ScreensPagingSource(popularMoviesRepository, ScreenTypes.POPULAR)
+        }.flow
+
+    val upComingMoviesList =
+        Pager(PagingConfig(pageSize = 1, enablePlaceholders = false)) {
+            ScreensPagingSource(popularMoviesRepository, ScreenTypes.UPCOMING)
+        }.flow
+
+    val topRatedMoviesList =
+        Pager(PagingConfig(pageSize = 1, enablePlaceholders = false)) {
+            ScreensPagingSource(popularMoviesRepository, ScreenTypes.TOP_RATED)
         }.flow
 
     val getMoviesDetails = popularMoviesRepository.movieDetailsResponse

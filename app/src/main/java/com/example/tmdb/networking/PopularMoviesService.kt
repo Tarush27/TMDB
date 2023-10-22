@@ -13,9 +13,22 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface PopularMoviesService {
-    @GET("movie/popular?api_key=1f590be8f881ebce14b4088e08124d84")
+    @GET("movie/popular")
     suspend fun getPopularMoviesResponsePerPage(
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("api_key") apiKey: String = API_KEY
+    ): Response<PopularMoviesResponse>
+
+    @GET("movie/top_rated")
+    suspend fun getTopRatedMoviesResponsePerPage(
+        @Query("page") page: Int,
+        @Query("api_key") apiKey: String = API_KEY
+    ): Response<PopularMoviesResponse>
+
+    @GET("movie/upcoming")
+    suspend fun getUpcomingMoviesResponsePerPage(
+        @Query("page") page: Int,
+        @Query("api_key") apiKey: String = API_KEY
     ): Response<PopularMoviesResponse>
 
     @GET("movie/popular?api_key=1f590be8f881ebce14b4088e08124d84")

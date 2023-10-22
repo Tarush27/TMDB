@@ -17,6 +17,8 @@ import com.example.tmdb.networking.RetrofitClient
 import com.example.tmdb.repository.PopularMoviesRepository
 import com.example.tmdb.utils.ScreenTypes
 import com.example.tmdb.utils.popularScreen
+import com.example.tmdb.utils.topRatedScreen
+import com.example.tmdb.utils.upComingScreen
 import com.example.tmdb.viewModel.PopularMoviesViewModel
 import com.example.tmdb.viewModel.PopularMoviesViewModelFactory
 import kotlinx.coroutines.launch
@@ -75,44 +77,57 @@ class ScreensActivity : BaseThemeActivity() {
 
             }
 
-//            ScreenTypes.TOP_RATED.topRatedScreen() -> {
-//                binding.baseToolbar.toolbar.apply {
-//                    navigationIcon = ContextCompat.getDrawable(
-//                        this@ScreensActivity, R.drawable.back_button
-//                    )
-//                    title = "Top rated"
-//                    setNavigationOnClickListener {
-//                        finish()
-//                    }
-//                }
+            ScreenTypes.TOP_RATED.topRatedScreen() -> {
+                binding.baseToolbar.toolbar.apply {
+                    navigationIcon = ContextCompat.getDrawable(
+                        this@ScreensActivity, R.drawable.back_button
+                    )
+                    title = "Top rated"
+                    setNavigationOnClickListener {
+                        finish()
+                    }
+                }
 //                setupPopularMoviesRv()
-//                popularMoviesViewModel.getTopRatedMoviesResponse.observe(this) { response ->
-//                    val topRatedMovies = response.popularMovies
-//                    Log.d("SA", "topRatedMovies:$topRatedMovies")
-//                    moviesAdapter.updateMoviesList(topRatedMovies)
-//                }
-//                popularMoviesViewModel.getTopRatedMovies()
-//            }
+                lifecycleScope.launch {
+                    Log.d("screensactivity", "before observe: observed...")
+                    popularMoviesViewModel.topRatedMoviesList.collect {
+                        moviesPagingAdapter.submitData(lifecycle, it)
+                    }
+                }
 
-//            ScreenTypes.UPCOMING.upComingScreen() -> {
-//                binding.baseToolbar.toolbar.apply {
-//                    navigationIcon = ContextCompat.getDrawable(
-//                        this@ScreensActivity, R.drawable.back_button
-//                    )
-//                    title = "Upcoming"
-//                    setNavigationOnClickListener {
-//                        finish()
-//                    }
-//                }
-//                setupPopularMoviesRv()
-//                popularMoviesViewModel.getUpComingMovies.observe(this) { response ->
-//                    val upComingMovies = response.popularMovies
-//                    Log.d("HSA", "upComingMovies:$upComingMovies")
-//                    moviesAdapter.updateMoviesList(upComingMovies)
-//
-//                }
-//                popularMoviesViewModel.getUpComingMovies()
-//            }
+                lifecycleScope.launch {
+                    moviesPagingAdapter.loadStateFlow.collect {
+                        val state = it.refresh
+                        binding.prgBarMovies.isVisible = state is LoadState.Loading
+                    }
+                }
+            }
+
+            ScreenTypes.UPCOMING.upComingScreen() -> {
+                binding.baseToolbar.toolbar.apply {
+                    navigationIcon = ContextCompat.getDrawable(
+                        this@ScreensActivity, R.drawable.back_button
+                    )
+                    title = "Upcoming"
+                    setNavigationOnClickListener {
+                        finish()
+                    }
+                }
+
+                lifecycleScope.launch {
+                    Log.d("screensactivity", "before observe: observed...")
+                    popularMoviesViewModel.upComingMoviesList.collect {
+                        moviesPagingAdapter.submitData(lifecycle, it)
+                    }
+                }
+
+                lifecycleScope.launch {
+                    moviesPagingAdapter.loadStateFlow.collect {
+                        val state = it.refresh
+                        binding.prgBarMovies.isVisible = state is LoadState.Loading
+                    }
+                }
+            }
         }
 
     }
