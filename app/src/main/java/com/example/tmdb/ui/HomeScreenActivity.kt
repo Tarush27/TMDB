@@ -3,8 +3,6 @@ package com.example.tmdb.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,15 +17,9 @@ import com.example.tmdb.networking.RetrofitClient
 import com.example.tmdb.repository.PopularMoviesRepository
 import com.example.tmdb.viewModel.PopularMoviesViewModel
 import com.example.tmdb.viewModel.PopularMoviesViewModelFactory
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
 
 class HomeScreenActivity : BaseThemeActivity() {
-    private lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
     private lateinit var popularMoviesViewModel: PopularMoviesViewModel
     private lateinit var binding: HomeScreenActivityBinding
     private var trendingMoviesAdapter = TrendingMoviesAdapter()
@@ -38,56 +30,6 @@ class HomeScreenActivity : BaseThemeActivity() {
         super.onCreate(savedInstanceState)
         binding = HomeScreenActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        firebaseRemoteConfig = Firebase.remoteConfig
-        val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 10
-        }
-        firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
-        firebaseRemoteConfig.fetchAndActivate()
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-
-//                    val isTrendingSectionEnableOrDisable =
-//                        firebaseRemoteConfig.getBoolean("trending_enabled")
-//                    Log.d(
-//                        "homescreen",
-//                        "isTrendingSectionEnableOrDisable:$isTrendingSectionEnableOrDisable "
-//                    )
-//                    if (isTrendingSectionEnableOrDisable) {
-//                        binding.trendingMoviesDayWeekSwitch.visibility = View.VISIBLE
-//                        binding.trendingMoviesHorizontalRv.visibility = View.VISIBLE
-//                        binding.trendingMoviesTv.visibility = View.VISIBLE
-//
-//                        binding.trendingTVShowsDayWeekSwitch.visibility = View.VISIBLE
-//                        binding.trendingTVShowsHorizontalRv.visibility = View.VISIBLE
-//                        binding.trendingTVShowsTv.visibility = View.VISIBLE
-//
-//                        binding.trendingMoviesDayWeekSwitch.visibility = View.GONE
-//                        binding.trendingMoviesHorizontalRv.visibility = View.GONE
-//                        binding.trendingMoviesTv.visibility = View.GONE
-//
-//                        binding.trendingTVShowsDayWeekSwitch.visibility = View.GONE
-//                        binding.trendingTVShowsHorizontalRv.visibility = View.GONE
-//                        binding.trendingTVShowsTv.visibility = View.GONE
-//                    }
-
-                    val fetchAndActivateSuccessSnackbar =
-                        Snackbar.make(
-                            binding.root,
-                            "fetch and activate success",
-                            Snackbar.LENGTH_LONG
-                        )
-                    fetchAndActivateSuccessSnackbar.show()
-                } else {
-                    val fetchAndActivateFailedSnackbar =
-                        Snackbar.make(
-                            binding.root,
-                            "fetch and activate failed",
-                            Snackbar.LENGTH_LONG
-                        )
-                    fetchAndActivateFailedSnackbar.show()
-                }
-            }
         binding.homeScreenAllPopularTv.setOnClickListener {
             val intent = Intent(this, ScreensActivity::class.java)
             intent.putExtra("screenType", "Popular")
