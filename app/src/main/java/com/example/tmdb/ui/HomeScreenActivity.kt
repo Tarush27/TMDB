@@ -19,6 +19,7 @@ import com.example.tmdb.repository.PopularMoviesRepository
 import com.example.tmdb.viewModel.PopularMoviesViewModel
 import com.example.tmdb.viewModel.PopularMoviesViewModelFactory
 
+
 class HomeScreenActivity : BaseThemeActivity() {
     private lateinit var popularMoviesViewModel: PopularMoviesViewModel
     private lateinit var binding: HomeScreenActivityBinding

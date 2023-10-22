@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    tools:context=".ui.DetailsScreen">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/trending_tv_shows_details_cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/trending_tv_shows_backdrop_iv"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:contentDescription="backdrop image"
+            android:scaleType="center"
+            android:scaleX="1.36"
+            android:scaleY="1.1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/movie_detail_backdrop" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/trending_tv_shows_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="#ffffff"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/trending_tv_shows_details_cl"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:text="The NUN II" />
+
+    <LinearLayout
+        android:id="@+id/trending_tv_shows_release_genre_ll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/trending_tv_shows_mcv"
+        app:layout_constraintTop_toTopOf="@id/trending_tv_shows_mcv">
+
+        <TextView
+            android:id="@+id/trending_tv_shows_genres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            tools:text="2023, Drama, Action" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/trending_tv_shows_vote_lang_ll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:paddingTop="4dp"
+        app:layout_constraintEnd_toEndOf="@id/trending_tv_shows_release_genre_ll"
+        app:layout_constraintStart_toStartOf="@id/trending_tv_shows_release_genre_ll"
+        app:layout_constraintTop_toBottomOf="@id/trending_tv_shows_release_genre_ll">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/trending_tv_shows_vote_cl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/circular_iv"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/custom_circle_drawable"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintCircleRadius="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/movie_avg_vote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/circular_iv"
+                app:layout_constraintEnd_toEndOf="@id/circular_iv"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@id/circular_iv"
+                app:layout_constraintTop_toTopOf="@id/circular_iv"
+                app:layout_constraintVertical_bias="0.5"
+                tools:text="7.1" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/trending_tv_shows_language_cl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="5dp">
+
+            <ImageView
+                android:id="@+id/square_iv"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/custom_square_drawable"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/trending_tv_shows_language"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/square_iv"
+                app:layout_constraintEnd_toEndOf="@id/square_iv"
+                app:layout_constraintStart_toStartOf="@id/square_iv"
+                app:layout_constraintTop_toTopOf="@id/square_iv"
+                tools:text="EN" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/trending_tv_shows_mcv"
+        android:layout_width="140dp"
+        android:layout_height="185dp"
+        android:layout_marginStart="25dp"
+        app:cardCornerRadius="5dp"
+        app:layout_constraintBottom_toBottomOf="@id/trending_tv_shows_details_cl"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trending_tv_shows_details_cl"
+        app:strokeWidth="0.0dp">
+
+        <ImageView
+            android:id="@+id/trending_tv_shows_iv"
+            android:layout_width="140dp"
+            android:layout_height="185dp"
+            android:contentDescription="@string/image"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/image" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/trending_tv_shows_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Original Title"
+        android:textColor="#7d7d7d"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trending_tv_shows_mcv" />
+
+    <TextView
+        android:id="@+id/trending_tv_shows_original_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="#CAC4C4"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trending_tv_shows_title_tv"
+        tools:text="The Nun II" />
+
+    <TextView
+        android:id="@+id/trending_tv_shows_overview_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Overview"
+        android:textColor="#CAC4C4"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trending_tv_shows_original_title" />
+
+    <TextView
+        android:id="@+id/trending_tv_shows_tagline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="#878787"
+        android:textStyle="italic"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trending_tv_shows_overview_tv"
+        tools:text="Confess your sins." />
+
+    <TextView
+        android:id="@+id/trending_tv_shows_overview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="#c3c3c3"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trending_tv_shows_tagline"
+        tools:text="In 1956 France, a priest is violently murdered, and Sister Irene begins to investigate. She once again comes face-to-face with a powerful evil." />
+
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
