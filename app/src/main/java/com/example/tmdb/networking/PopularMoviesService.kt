@@ -16,44 +16,44 @@ interface PopularMoviesService {
     @GET("movie/popular")
     suspend fun getPopularMoviesResponsePerPage(
         @Query("page") page: Int,
-        @Query("api_key") apiKey: String = API_KEY
+        @Query("api_key") apiKey: String = API_KEY,
     ): Response<PopularMoviesResponse>
 
     @GET("movie/top_rated")
     suspend fun getTopRatedMoviesResponsePerPage(
         @Query("page") page: Int,
-        @Query("api_key") apiKey: String = API_KEY
+        @Query("api_key") apiKey: String = API_KEY,
     ): Response<PopularMoviesResponse>
 
     @GET("movie/upcoming")
     suspend fun getUpcomingMoviesResponsePerPage(
         @Query("page") page: Int,
-        @Query("api_key") apiKey: String = API_KEY
+        @Query("api_key") apiKey: String = API_KEY,
     ): Response<PopularMoviesResponse>
 
     @GET("movie/popular?api_key=1f590be8f881ebce14b4088e08124d84")
-    fun getPopularMoviesResponse(): Call<PopularMoviesResponse>
+    suspend fun getPopularMoviesResponse(): Response<PopularMoviesResponse>
 
     @GET("movie/top_rated?api_key=1f590be8f881ebce14b4088e08124d84")
-    fun getTopRatedMoviesResponse(): Call<PopularMoviesResponse>
+    suspend fun getTopRatedMoviesResponse(): Response<PopularMoviesResponse>
 
     @GET("movie/now_playing?api_key=1f590be8f881ebce14b4088e08124d84")
-    fun getNowPlayingMoviesResponse(): Call<NowPlayingMoviesResponse>
+    suspend fun getNowPlayingMoviesResponse(): Response<NowPlayingMoviesResponse>
 
     @GET("movie/upcoming?api_key=1f590be8f881ebce14b4088e08124d84")
-    fun getUpcomingMoviesResponse(): Call<PopularMoviesResponse>
+    suspend fun getUpcomingMoviesResponse(): Response<PopularMoviesResponse>
 
     @GET("trending/movie/{time_window}?api_key=1f590be8f881ebce14b4088e08124d84")
-    fun getTrendingMoviesResponse(@Path("time_window") time_window: String): Call<PopularMoviesResponse>
+    suspend fun getTrendingMoviesResponse(@Path("time_window") time_window: String): Response<PopularMoviesResponse>
 
     @GET("trending/tv/{time_window}?api_key=1f590be8f881ebce14b4088e08124d84")
-    fun getTrendingTVShowsResponse(@Path("time_window") time_window: String): Call<TrendingTVShowsResponse>
+    suspend fun getTrendingTVShowsResponse(@Path("time_window") time_window: String): Response<TrendingTVShowsResponse>
 
     @GET("movie/{movie_id}?api_key=1f590be8f881ebce14b4088e08124d84")
-    fun getMoviesDetails(@Path("movie_id") movie_id: Int): Call<DetailsResponse>
+    suspend fun getMoviesDetails(@Path("movie_id") movie_id: Long): Response<DetailsResponse>
 
     @GET("tv/{series_id}?api_key=1f590be8f881ebce14b4088e08124d84")
-    fun getTrendingTvShowsDetails(@Path("series_id") series_id: Int): Call<TrendingTVShowsDetailsResponse>
+    suspend fun getTrendingTvShowsDetails(@Path("series_id") series_id: Long): Response<TrendingTVShowsDetailsResponse>
 
 
 }

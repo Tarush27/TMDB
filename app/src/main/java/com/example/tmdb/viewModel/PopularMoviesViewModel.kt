@@ -2,13 +2,12 @@ package com.example.tmdb.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import com.example.tmdb.paging.ScreensPagingSource
+import androidx.paging.PagingData
+import com.example.tmdb.model.PopularMoviesModel
 import com.example.tmdb.repository.PopularMoviesRepository
-import com.example.tmdb.utils.ScreenTypes
 import com.example.tmdb.utils.TimeWindow
 import com.example.tmdb.utils.stringAbc
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesRepository) :
@@ -21,63 +20,84 @@ class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesR
 
     val getPopularMoviesResponse = popularMoviesRepository.popularMoviesResponse
 
-    fun getTopRatedMovies() = popularMoviesRepository.getTopRatedMovies()
+    fun getTopRatedMovies() = viewModelScope.launch {
+        popularMoviesRepository.getTopRatedMovies()
+    }
+
     val getTopRatedMoviesResponse = popularMoviesRepository.topRatedMoviesResponse
 
-    fun getUpComingMovies() = popularMoviesRepository.getUpcomingMovies()
+    fun getUpComingMovies() = viewModelScope.launch {
+        popularMoviesRepository.getUpcomingMovies()
+    }
+
     val getUpComingMovies = popularMoviesRepository.upComingMoviesResponse
 
 
     fun getTrendingMovies(isDayOrWeek: Boolean) {
-        popularMoviesRepository.getTrendingMovies(
-            (if (isDayOrWeek)
-                TimeWindow.WEEK
-            else TimeWindow.DAY)
-                .stringAbc()
-        )
+        viewModelScope.launch {
+            popularMoviesRepository.getTrendingMovies(
+                (if (isDayOrWeek)
+                    TimeWindow.WEEK
+                else TimeWindow.DAY)
+                    .stringAbc()
+            )
+        }
     }
 
     val getTrendingMovies = popularMoviesRepository.trendingMoviesResponse
 
     fun getTrendingTVShows(isDayOrWeek: Boolean) {
-        popularMoviesRepository.getTrendingTVShows(
-            (if (isDayOrWeek)
-                TimeWindow.WEEK
-            else TimeWindow.DAY)
-                .stringAbc()
-        )
+        viewModelScope.launch {
+            popularMoviesRepository.getTrendingTVShows(
+                (if (isDayOrWeek)
+                    TimeWindow.WEEK
+                else TimeWindow.DAY)
+                    .stringAbc()
+            )
+        }
     }
 
     val getTrendingTVShows = popularMoviesRepository.trendingTVShowsResponse
 
-    fun getMoviesDetails(id: Int) {
-        popularMoviesRepository.getMoviesDetails(id)
+    fun getMoviesDetails(id: Long, type: String?) {
+        viewModelScope.launch {
+            popularMoviesRepository.getMoviesDetails(id, type)
+        }
+
     }
 
-    val popularMoviesList =
-        Pager(PagingConfig(pageSize = 1, enablePlaceholders = false)) {
-            ScreensPagingSource(popularMoviesRepository, ScreenTypes.POPULAR)
-        }.flow
 
-    val upComingMoviesList =
-        Pager(PagingConfig(pageSize = 1, enablePlaceholders = false)) {
-            ScreensPagingSource(popularMoviesRepository, ScreenTypes.UPCOMING)
-        }.flow
+    fun getPopularMoviesPageWise(): Flow<PagingData<PopularMoviesModel>> {
 
-    val topRatedMoviesList =
-        Pager(PagingConfig(pageSize = 1, enablePlaceholders = false)) {
-            ScreensPagingSource(popularMoviesRepository, ScreenTypes.TOP_RATED)
-        }.flow
+        return popularMoviesRepository.getPopularMoviesPerPage()
+    }
+
+    fun getTopRatedMoviesPageWise(): Flow<PagingData<PopularMoviesModel>> {
+
+        return popularMoviesRepository.getTopRatedMoviesPerPage()
+
+    }
+
+    fun getUpcomingMoviesPageWise(): Flow<PagingData<PopularMoviesModel>> {
+
+        return popularMoviesRepository.getUpcomingMoviesPerPage()
+
+    }
 
     val getMoviesDetails = popularMoviesRepository.movieDetailsResponse
 
-    fun getTrendingTVShowsDetails(id: Int) {
-        popularMoviesRepository.getTrendingTVShowsDetails(id)
+    fun getTrendingTVShowsDetails(id: Long, trendingTvShows: String?) {
+        viewModelScope.launch {
+
+            popularMoviesRepository.getTrendingTVShowsDetails(id, trendingTvShows)
+        }
     }
 
     val getTrendingTvShowsDetails = popularMoviesRepository.trendingTVShowsDetailsResponse
 
-    fun getNowPlayingMoviesDetails() = popularMoviesRepository.getNowPlayingMoviesDetails()
+    fun getNowPlayingMoviesDetails() = viewModelScope.launch {
+        popularMoviesRepository.getNowPlayingMoviesDetails()
+    }
 
     val getNowPlayingMoviesDetails = popularMoviesRepository.nowPlayingMoviesResponse
 }

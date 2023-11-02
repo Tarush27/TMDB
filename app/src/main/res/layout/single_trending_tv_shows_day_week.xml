@@ -28,12 +28,12 @@
 
     <TextView
         android:id="@+id/trending_TV_shows_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:background="#04101c"
         android:gravity="center"
-        android:textAlignment="center"
+        android:lines="3"
         android:textColor="#ffffff"
         android:textSize="11sp"
         app:layout_constraintLeft_toLeftOf="@id/trending_TV_shows_mcv"

@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterInside
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.tmdb.databinding.ScreensItemBinding
 import com.example.tmdb.model.PopularMoviesModel
 import com.example.tmdb.ui.DetailsScreen
@@ -21,17 +23,22 @@ class MoviesPagingAdapter :
     inner class PopularMoviesItemViewHolder(val binding: ScreensItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
+
     override fun onBindViewHolder(holder: PopularMoviesItemViewHolder, position: Int) {
         val movie = getItem(position)!!
-        val posterPath = "https://image.tmdb.org/t/p/w500"
+        val posterPath = "https://image.tmdb.org/t/p/original"
         with(holder) {
             setIsRecyclable(false)
             with(movie) {
                 binding.screensTv.text = this.popularMovieTitle
-                binding.screensIv.load("$posterPath${this.posterPath}")
+//                binding.screensIv.load("$posterPath${this.posterPath}"){
+//                    transformations(RoundedCornersTransformation(35f))
+//                }
+                Glide.with(itemView.context).load("$posterPath${this.posterPath}").apply {
+                }.into(binding.screensIv)
                 binding.screensMcv.setOnClickListener {
                     val bundle = Bundle()
-                    bundle.putInt("movie_id", this.popularMovieId!!)
+                    bundle.putLong("movie_id", this.popularMovieId!!)
                     val detailsIntent =
                         Intent(it.context, DetailsScreen::class.java)
                     detailsIntent.putExtras(bundle)

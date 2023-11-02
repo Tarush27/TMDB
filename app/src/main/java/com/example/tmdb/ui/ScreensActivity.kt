@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.MovieApplication
 import com.example.tmdb.R
-import com.example.tmdb.adapter.LoadMoreAdapter
 import com.example.tmdb.adapter.MoviesPagingAdapter
 import com.example.tmdb.databinding.ActivityScreensBinding
 import com.example.tmdb.networking.PopularMoviesService
@@ -33,20 +35,21 @@ class ScreensActivity : BaseThemeActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityScreensBinding.inflate(layoutInflater)
         setContentView(binding.root)
+//        val popularMoviesRepository = (application as MovieApplication).popularMoviesRepository
         val popularMoviesService: PopularMoviesService = RetrofitClient.service
-        val popularMoviesRepository = PopularMoviesRepository(popularMoviesService)
+        val movieDatabase = (application as MovieApplication).movieDatabase
+        val popularMoviesRepository =
+            PopularMoviesRepository(popularMoviesService, movieDatabase, this)
         popularMoviesViewModel = ViewModelProvider(
             this, PopularMoviesViewModelFactory(popularMoviesRepository)
         )[PopularMoviesViewModel::class.java]
 //        setupPopularMoviesRv()
 
-        moviesPagingAdapter = MoviesPagingAdapter()
-        binding.screensHorizontalRv.layoutManager = GridLayoutManager(this, 2)
+//        moviesPagingAdapter = MoviesPagingAdapter()
+//        binding.screensHorizontalRv.layoutManager = GridLayoutManager(this, 2)
+//
+//        binding.screensHorizontalRv.adapter = moviesPagingAdapter
 
-        binding.screensHorizontalRv.adapter = moviesPagingAdapter
-        binding.screensHorizontalRv.adapter = moviesPagingAdapter.withLoadStateFooter(
-            LoadMoreAdapter()
-        )
         when (intent.getStringExtra("screenType")) {
             ScreenTypes.POPULAR.popularScreen() -> {
                 binding.baseToolbar.toolbar.apply {
@@ -59,19 +62,35 @@ class ScreensActivity : BaseThemeActivity() {
                     }
                 }
 
-//                setupPopularMoviesRv()
-
+                setupPopularMoviesRv()
+//                lifecycleScope.launch {
+//                    repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                        moviesPagingAdapter.loadStateFlow.collect {
+//                            binding.prgBarMovies.isVisible = it.source.append is LoadState.Loading
+//
+//                        }
+//                    }
+//                }
                 lifecycleScope.launch {
                     Log.d("screensactivity", "before observe: observed...")
-                    popularMoviesViewModel.popularMoviesList.collect {
+                    popularMoviesViewModel.getPopularMoviesPageWise().collect {
                         moviesPagingAdapter.submitData(lifecycle, it)
                     }
+
                 }
 
+//                lifecycleScope.launch {
+//                    moviesPagingAdapter.loadStateFlow.collect {
+//                        val state = it.refresh
+//                        binding.prgBarMovies.isVisible = state is LoadState.Loading
+//                    }
+//                }
+
                 lifecycleScope.launch {
-                    moviesPagingAdapter.loadStateFlow.collect {
-                        val state = it.refresh
-                        binding.prgBarMovies.isVisible = state is LoadState.Loading
+                    repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        moviesPagingAdapter.loadStateFlow.collect {
+                            binding.prgBarMovies.isVisible = it.source.append is LoadState.Loading
+                        }
                     }
                 }
 
@@ -87,18 +106,25 @@ class ScreensActivity : BaseThemeActivity() {
                         finish()
                     }
                 }
-//                setupPopularMoviesRv()
+                setupPopularMoviesRv()
                 lifecycleScope.launch {
                     Log.d("screensactivity", "before observe: observed...")
-                    popularMoviesViewModel.topRatedMoviesList.collect {
+                    popularMoviesViewModel.getTopRatedMoviesPageWise().collect {
                         moviesPagingAdapter.submitData(lifecycle, it)
                     }
                 }
 
+//                lifecycleScope.launch {
+//                    moviesPagingAdapter.loadStateFlow.collect {
+//                        val state = it.refresh
+//                        binding.prgBarMovies.isVisible = state is LoadState.Loading
+//                    }
+//                }
                 lifecycleScope.launch {
-                    moviesPagingAdapter.loadStateFlow.collect {
-                        val state = it.refresh
-                        binding.prgBarMovies.isVisible = state is LoadState.Loading
+                    repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        moviesPagingAdapter.loadStateFlow.collect {
+                            binding.prgBarMovies.isVisible = it.source.append is LoadState.Loading
+                        }
                     }
                 }
             }
@@ -113,20 +139,29 @@ class ScreensActivity : BaseThemeActivity() {
                         finish()
                     }
                 }
+                setupPopularMoviesRv()
 
                 lifecycleScope.launch {
                     Log.d("screensactivity", "before observe: observed...")
-                    popularMoviesViewModel.upComingMoviesList.collect {
+                    popularMoviesViewModel.getUpcomingMoviesPageWise().collect {
                         moviesPagingAdapter.submitData(lifecycle, it)
                     }
                 }
 
                 lifecycleScope.launch {
-                    moviesPagingAdapter.loadStateFlow.collect {
-                        val state = it.refresh
-                        binding.prgBarMovies.isVisible = state is LoadState.Loading
+                    repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        moviesPagingAdapter.loadStateFlow.collect {
+                            binding.prgBarMovies.isVisible = it.source.append is LoadState.Loading
+                        }
                     }
                 }
+
+//                lifecycleScope.launch {
+//                    moviesPagingAdapter.loadStateFlow.collect {
+//                        val state = it.refresh
+//                        binding.prgBarMovies.isVisible = state is LoadState.Loading
+//                    }
+//                }
             }
         }
 
@@ -134,10 +169,11 @@ class ScreensActivity : BaseThemeActivity() {
 
     private fun setupPopularMoviesRv() {
 //        moviesAdapter = MoviesAdapter()
-//        moviesPagingAdapter = MoviesPagingAdapter()
-//        binding.screensHorizontalRv.layoutManager = GridLayoutManager(this, 2)
-//
-//        binding.screensHorizontalRv.adapter = moviesPagingAdapter
+
+        moviesPagingAdapter = MoviesPagingAdapter()
+        binding.screensHorizontalRv.layoutManager = GridLayoutManager(this, 2)
+
+        binding.screensHorizontalRv.adapter = moviesPagingAdapter
 //        binding.screensHorizontalRv.adapter = moviesPagingAdapter.withLoadStateFooter(
 //            LoadMoreAdapter()
 //        )

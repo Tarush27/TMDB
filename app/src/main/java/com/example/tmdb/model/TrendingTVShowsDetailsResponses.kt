@@ -6,7 +6,7 @@ data class TrendingTVShowsDetailsResponse(
 
     @SerializedName("backdrop_path") var backdropPath: String? = null,
     @SerializedName("genres") var genres: ArrayList<TrendingTVShowsGenres> = arrayListOf(),
-    @SerializedName("id") var id: Int? = null,
+    @SerializedName("id") var id: Long? = null,
     @SerializedName("original_language") var originalLanguage: String? = null,
     @SerializedName("original_name") var originalName: String? = null,
     @SerializedName("overview") var overview: String? = null,

@@ -3,34 +3,57 @@ package com.example.tmdb.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.size
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.MovieApplication
 import com.example.tmdb.R
 import com.example.tmdb.adapter.HomeScreenMoviesAdapter
 import com.example.tmdb.adapter.NowPlayingMoviesAdapter
 import com.example.tmdb.adapter.TrendingMoviesAdapter
 import com.example.tmdb.adapter.TrendingTVShowsAdapter
+import com.example.tmdb.databinding.HomeActivityBinding
 import com.example.tmdb.databinding.HomeScreenActivityBinding
 import com.example.tmdb.model.PopularMoviesModel
 import com.example.tmdb.networking.PopularMoviesService
 import com.example.tmdb.networking.RetrofitClient
 import com.example.tmdb.repository.PopularMoviesRepository
+import com.example.tmdb.utils.SharedPrefsUtils
 import com.example.tmdb.viewModel.PopularMoviesViewModel
 import com.example.tmdb.viewModel.PopularMoviesViewModelFactory
 
 
 class HomeScreenActivity : BaseThemeActivity() {
     private lateinit var popularMoviesViewModel: PopularMoviesViewModel
-    private lateinit var binding: HomeScreenActivityBinding
+
+    //    private lateinit var binding: HomeScreenActivityBinding
+    private lateinit var binding: HomeActivityBinding
     private var trendingMoviesAdapter = TrendingMoviesAdapter()
     private var homeScreenMoviesAdapter = HomeScreenMoviesAdapter()
     private var trendingTVShowsAdapter = TrendingTVShowsAdapter()
     private var nowPlayingMoviesAdapter = NowPlayingMoviesAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = HomeScreenActivityBinding.inflate(layoutInflater)
+        binding = HomeActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+//        val isTrendingSectionEnabled = SharedPrefsUtils.getIsTrendingEnabled(this)
+//        if (!isTrendingSectionEnabled) {
+//            binding.trendingMoviesDayWeekSwitch.visibility = View.GONE
+//            binding.trendingMoviesHorizontalRv.visibility = View.GONE
+//            binding.trendingMoviesTv.visibility = View.GONE
+//
+//            binding.trendingTVShowsDayWeekSwitch.visibility = View.GONE
+//            binding.trendingTVShowsHorizontalRv.visibility = View.GONE
+//            binding.trendingTVShowsTv.visibility = View.GONE
+//
+//            binding.trendingMoviesDayWeekText.visibility = View.GONE
+//            binding.trendingTvShowsDayWeekText.visibility = View.GONE
+//        }
         binding.homeScreenAllPopularTv.setOnClickListener {
             val intent = Intent(this, ScreensActivity::class.java)
             intent.putExtra("screenType", "Popular")
@@ -46,8 +69,11 @@ class HomeScreenActivity : BaseThemeActivity() {
             intent.putExtra("screenType", "Upcoming")
             startActivity(intent)
         }
+
         val popularMoviesService: PopularMoviesService = RetrofitClient.service
-        val popularMoviesRepository = PopularMoviesRepository(popularMoviesService)
+        val movieDatabase = (application as MovieApplication).movieDatabase
+        val popularMoviesRepository =
+            PopularMoviesRepository(popularMoviesService, movieDatabase, this)
         popularMoviesViewModel = ViewModelProvider(
             this, PopularMoviesViewModelFactory(popularMoviesRepository)
         )[PopularMoviesViewModel::class.java]
@@ -58,55 +84,111 @@ class HomeScreenActivity : BaseThemeActivity() {
             title = context.getString(R.string.home_screen_toolbar_title)
             menuInflater.inflate(R.menu.search_menu, menu)
         }
-        setupTrendingMoviesDayWeekRv()
-        setupTrendingTVShowsDayWeekRv()
-        setupNowPlayingMoviesRv()
         popularMoviesViewModel.getPopularMoviesResponse.observe(this) { response ->
             setupPopularMoviesRv()
-            val popularMovies = response.popularMovies
-            Log.d("HSApopular", "popularMovies:$popularMovies")
-            homeScreenMoviesAdapter.updateHomeScreenMoviesList(popularMovies as ArrayList<PopularMoviesModel>)
+            if (response == null) {
+//                Log.d("HSAnullresp", "response: $response")
+                binding.noInternet.root.visibility = View.VISIBLE
+                binding.nestedScrollView.visibility = View.GONE
+            } else {
+                val popularMovies = response.popularMovies
+                Log.d("HSApopular", "popularMovies:$popularMovies")
+                homeScreenMoviesAdapter.updateHomeScreenMoviesList(popularMovies as ArrayList<PopularMoviesModel>)
+            }
+//            val popularMovies = response!!.popularMovies
+//
+//            Log.d("HSApopular", "popularMovies:$popularMovies")
+//            homeScreenMoviesAdapter.updateHomeScreenMoviesList(popularMovies as ArrayList<PopularMoviesModel>)
         }
+
+
         popularMoviesViewModel.getTopRatedMoviesResponse.observe(this) { response ->
             setupTopRatedMoviesRv()
-            val topRatedMovies = response.popularMovies
-            Log.d("HSAtoprated", "topRatedMovies:$topRatedMovies")
-            homeScreenMoviesAdapter.updateHomeScreenMoviesList(topRatedMovies as ArrayList<PopularMoviesModel>)
+            if (response == null) {
+                binding.noInternet.root.visibility = View.VISIBLE
+                binding.nestedScrollView.visibility = View.GONE
+            } else {
+                val topRatedMovies = response.popularMovies
+                Log.d("HSAtoprated", "topRatedMovies:$topRatedMovies")
+                homeScreenMoviesAdapter.updateHomeScreenMoviesList(topRatedMovies as ArrayList<PopularMoviesModel>)
+            }
+//            val topRatedMovies = response.popularMovies
+//            Log.d("HSAtoprated", "topRatedMovies:$topRatedMovies")
+//            homeScreenMoviesAdapter.updateHomeScreenMoviesList(topRatedMovies as ArrayList<PopularMoviesModel>)
         }
 
         popularMoviesViewModel.getUpComingMovies.observe(this) { response ->
             setupUpcomingMoviesRv()
-            val upComingMovies = response.popularMovies
-            Log.d("HSAupcoming", "upComingMovies:$upComingMovies")
-            homeScreenMoviesAdapter.updateHomeScreenMoviesList(upComingMovies as ArrayList<PopularMoviesModel>)
+            if (response == null) {
+                binding.noInternet.root.visibility = View.VISIBLE
+                binding.nestedScrollView.visibility = View.GONE
+            } else {
+                val upComingMovies = response.popularMovies
+                Log.d("HSAupcoming", "upComingMovies:$upComingMovies")
+                homeScreenMoviesAdapter.updateHomeScreenMoviesList(upComingMovies as ArrayList<PopularMoviesModel>)
+            }
+//            val upComingMovies = response.popularMovies
+//            Log.d("HSAupcoming", "upComingMovies:$upComingMovies")
+//            homeScreenMoviesAdapter.updateHomeScreenMoviesList(upComingMovies as ArrayList<PopularMoviesModel>)
         }
 
         popularMoviesViewModel.getNowPlayingMoviesDetails.observe(this) { response ->
-            val nowPlayingMovies = response.nowPlayingMovies
-            Log.d("HSAnowplayingmov", "nowplayingmov:$nowPlayingMovies")
-            nowPlayingMoviesAdapter.updateNowPlayingMoviesList(nowPlayingMovies)
+            setupNowPlayingMoviesRv()
+            if (response == null) {
+                binding.noInternet.root.visibility = View.VISIBLE
+                binding.nestedScrollView.visibility = View.GONE
+            } else {
+                val nowPlayingMovies = response.nowPlayingMovies
+                Log.d("HSAnowplayingmov", "nowplayingmov:$nowPlayingMovies")
+                nowPlayingMoviesAdapter.updateNowPlayingMoviesList(nowPlayingMovies)
+            }
+//            val nowPlayingMovies = response.nowPlayingMovies
+//            Log.d("HSAnowplayingmov", "nowplayingmov:$nowPlayingMovies")
+//            nowPlayingMoviesAdapter.updateNowPlayingMoviesList(nowPlayingMovies)
 
         }
-
         popularMoviesViewModel.getTrendingMovies.observe(this) { response ->
-            val trendingMovies = response.popularMovies
-            Log.d("HSAtrendingmovies", "trendingMovies:$trendingMovies")
-            trendingMoviesAdapter.updateTrendingMoviesList(trendingMovies as ArrayList<PopularMoviesModel>)
+            setupTrendingMoviesDayWeekRv()
+            if (response == null) {
+//                binding.noInternet.root.visibility = View.VISIBLE
+//                binding.nestedScrollView.visibility = View.GONE
+                binding.trendingMoviesHorizontalRv.visibility = View.GONE
+                Toast.makeText(this, "Trending Movies fetch failed", Toast.LENGTH_SHORT).show()
+            } else {
+                val trendingMovies = response.popularMovies
+                Log.d("HSAtrendingmovies", "trendingMovies:$trendingMovies")
+                trendingMoviesAdapter.updateTrendingMoviesList(trendingMovies as ArrayList<PopularMoviesModel>)
+            }
+
 
         }
 
         popularMoviesViewModel.getTrendingMovies(false)
         binding.trendingMoviesDayWeekSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                binding.trendingMoviesDayWeekSwitch.textOn = "Week"
+                binding.trendingMoviesDayWeekText.text = "Week"
                 popularMoviesViewModel.getTrendingMovies(true)
                 popularMoviesViewModel.getTrendingMovies.observe(this) {
-                    trendingMoviesAdapter.updateTrendingMoviesList(it.popularMovies as ArrayList<PopularMoviesModel>)
+                    setupTrendingMoviesDayWeekRv()
+                    if (it == null) {
+                        binding.trendingMoviesHorizontalRv.visibility = View.GONE
+                    } else {
+                        trendingMoviesAdapter.updateTrendingMoviesList(it.popularMovies as ArrayList<PopularMoviesModel>)
+                    }
+
                 }
             } else {
+//                binding.trendingMoviesDayWeekSwitch.text = "Day"
+                binding.trendingMoviesDayWeekText.text = "Day"
                 popularMoviesViewModel.getTrendingMovies(false)
                 popularMoviesViewModel.getTrendingMovies.observe(this) {
-                    trendingMoviesAdapter.updateTrendingMoviesList(it.popularMovies as ArrayList<PopularMoviesModel>)
+                    setupTrendingMoviesDayWeekRv()
+                    if (it == null) {
+                        binding.trendingMoviesHorizontalRv.visibility = View.GONE
+                    } else {
+                        trendingMoviesAdapter.updateTrendingMoviesList(it.popularMovies as ArrayList<PopularMoviesModel>)
+                    }
+
                 }
             }
         }
@@ -114,35 +196,58 @@ class HomeScreenActivity : BaseThemeActivity() {
         popularMoviesViewModel.getTrendingTVShows(false)
 
         popularMoviesViewModel.getTrendingTVShows.observe(this) { response ->
-            val trendingTVShows = response.trendingTVShows
-            Log.d("HSAtrendingtvshow", "trendingTVShows:$trendingTVShows")
-            trendingTVShowsAdapter.updateTrendingTVShowsList(trendingTVShows)
+            setupTrendingTVShowsDayWeekRv()
+            if (response == null) {
+                binding.trendingTVShowsHorizontalRv.visibility = View.GONE
+                Toast.makeText(this, "Trending TV Shows fetch failed", Toast.LENGTH_SHORT).show()
+            } else {
+                val trendingTVShows = response.trendingTVShows
+                Log.d("HSAtrendingtvshow", "trendingTVShows:$trendingTVShows")
+                trendingTVShowsAdapter.updateTrendingTVShowsList(trendingTVShows)
+            }
+
 
         }
         binding.trendingTVShowsDayWeekSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                binding.trendingTVShowsDayWeekSwitch.textOn = "Week"
+                binding.trendingTvShowsDayWeekText.text = "Week"
                 popularMoviesViewModel.getTrendingTVShows(true)
                 popularMoviesViewModel.getTrendingTVShows.observe(this) {
-                    trendingTVShowsAdapter.updateTrendingTVShowsList(it.trendingTVShows)
+                    setupTrendingTVShowsDayWeekRv()
+                    if (it == null) {
+                        binding.trendingTVShowsHorizontalRv.visibility = View.GONE
+                    } else {
+                        trendingTVShowsAdapter.updateTrendingTVShowsList(it.trendingTVShows)
+                    }
+
                 }
             } else {
+//                binding.trendingMoviesDayWeekSwitch.text = "Day"
+                binding.trendingTvShowsDayWeekText.text = "Day"
                 popularMoviesViewModel.getTrendingTVShows(false)
                 popularMoviesViewModel.getTrendingTVShows.observe(this) {
-                    trendingTVShowsAdapter.updateTrendingTVShowsList(it.trendingTVShows)
+                    setupTrendingTVShowsDayWeekRv()
+                    if (it == null) {
+                        binding.trendingTVShowsHorizontalRv.visibility = View.GONE
+                    } else {
+                        trendingTVShowsAdapter.updateTrendingTVShowsList(it.trendingTVShows)
+                    }
+
                 }
             }
         }
 
-        popularMoviesViewModel.getTopRatedMovies()
         popularMoviesViewModel.getPopularMovies()
+        popularMoviesViewModel.getTopRatedMovies()
         popularMoviesViewModel.getUpComingMovies()
         popularMoviesViewModel.getNowPlayingMoviesDetails()
 
     }
 
     private fun setupPopularMoviesRv() {
+        val popularMovies = "Popular"
         homeScreenMoviesAdapter = HomeScreenMoviesAdapter()
+        homeScreenMoviesAdapter.setMovieType(popularMovies)
         binding.popularMoviesHorizontalRv.layoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.HORIZONTAL,
@@ -153,7 +258,9 @@ class HomeScreenActivity : BaseThemeActivity() {
     }
 
     private fun setupTopRatedMoviesRv() {
+        val topRatedMovies = "Top rated"
         homeScreenMoviesAdapter = HomeScreenMoviesAdapter()
+        homeScreenMoviesAdapter.setMovieType(topRatedMovies)
         binding.topRatedMoviesHorizontalRv.layoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.HORIZONTAL,
@@ -164,7 +271,9 @@ class HomeScreenActivity : BaseThemeActivity() {
     }
 
     private fun setupUpcomingMoviesRv() {
+        val upcomingMovies = "Upcoming"
         homeScreenMoviesAdapter = HomeScreenMoviesAdapter()
+        homeScreenMoviesAdapter.setMovieType(upcomingMovies)
         binding.upcomingMoviesHorizontalRv.layoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.HORIZONTAL,

@@ -28,13 +28,13 @@
 
     <TextView
         android:id="@+id/upcoming_movies_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:background="#04101c"
-        android:gravity="center"
-        android:textAlignment="center"
+        android:lines="3"
         android:textColor="#ffffff"
+        android:gravity="center"
         android:textSize="11sp"
         app:layout_constraintLeft_toLeftOf="@id/upcoming_movies_mcv"
         app:layout_constraintRight_toRightOf="@id/upcoming_movies_mcv"

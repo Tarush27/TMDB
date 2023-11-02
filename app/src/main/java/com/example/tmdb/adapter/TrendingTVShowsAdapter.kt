@@ -22,7 +22,7 @@ class TrendingTVShowsAdapter :
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): TrendingTVShowsItemViewHolder {
         val binding =
             SingleTrendingTvShowsDayWeekBinding.inflate(
@@ -44,7 +44,8 @@ class TrendingTVShowsAdapter :
                 binding.trendingTVShowsTv.text = this.trendingTVShowName
                 binding.trendingTVShowsMcv.setOnClickListener {
                     val bundle = Bundle()
-                    bundle.putInt("trending_tv_show_id", this.trendingTVShowId!!)
+                    bundle.putLong("trending_tv_show_id", this.trendingTVShowId!!)
+                    bundle.putString("type", "Trending TV Shows")
                     val detailsIntent = Intent(it.context, TrendingTvShowsDetailsScreen::class.java)
                     detailsIntent.putExtras(bundle)
                     Log.d("trendingtvshowsadapter", "detailsIntent: $detailsIntent")

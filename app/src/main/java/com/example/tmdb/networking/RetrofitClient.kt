@@ -5,7 +5,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
     val retrofit = Retrofit.Builder()
-        .client(OkHttpLoginInterceptor.okHttpClient)
+        .client(OkHttpLoginInterceptor.okHttpClient.apply {
+            println("read time out: $readTimeoutMillis")
+            println("connection time out: $connectTimeoutMillis")
+        })
         .baseUrl("https://api.themoviedb.org/3/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()

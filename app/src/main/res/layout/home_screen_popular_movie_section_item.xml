@@ -11,7 +11,7 @@
         android:layout_width="102dp"
         android:layout_height="144dp"
         app:cardBackgroundColor="#04101c"
-        app:cardCornerRadius="5dp"
+        app:cardCornerRadius="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/popular_movie_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:contentDescription="@string/image"
             android:scaleType="centerCrop"
             tools:src="@drawable/image" />
@@ -28,17 +28,15 @@
 
     <TextView
         android:id="@+id/popular_movie_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#04101c"
         android:layout_marginTop="4dp"
-        android:gravity="center"
-        android:textAlignment="center"
+        android:background="#04101c"
+        android:lines="3"
         android:textColor="#ffffff"
+        android:gravity="center"
         android:textSize="11sp"
-        app:layout_constraintLeft_toLeftOf="@id/popular_movies_mcv"
-        app:layout_constraintRight_toRightOf="@id/popular_movies_mcv"
         app:layout_constraintTop_toBottomOf="@id/popular_movies_mcv"
-        tools:text="The Nun II" />
+        tools:text="Mission: Impossible - Dead Reckoning Part One" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

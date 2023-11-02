@@ -11,6 +11,26 @@
         android:id="@+id/base_toolbar"
         layout="@layout/base_material_toolbar" />
 
+    <!--    <com.google.android.material.progressindicator.LinearProgressIndicator-->
+    <!--        android:id="@+id/linearProgressBar"-->
+    <!--        android:visibility="gone"-->
+    <!--        android:indeterminate="true"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/base_toolbar">-->
+
+    <!--    </com.google.android.material.progressindicator.LinearProgressIndicator>-->
+
+    <include
+        android:id="@+id/no_internet"
+        layout="@layout/no_internet_screen"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/base_toolbar" />
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
@@ -35,7 +55,9 @@
                 android:textColor="@color/white"
                 android:textSize="22sp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@id/home_screen_all_popular_tv"
+                app:layout_constraintBottom_toBottomOf="@id/home_screen_all_popular_tv"
+                />
 
             <TextView
                 android:id="@+id/home_screen_all_popular_tv"
@@ -60,22 +82,23 @@
                 android:id="@+id/popular_movies_horizontal_rv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:orientation="horizontal"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/popular_tv"
+                app:layout_constraintTop_toBottomOf="@id/home_screen_all_popular_tv"
                 tools:itemCount="2"
                 tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/home_screen_popular_movie_section_item" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+          <!--  <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/popular_movies_horizontal_rv">
+                app:layout_constraintTop_toBottomOf="@id/popular_movies_horizontal_rv">-->
 
                 <TextView
                     android:id="@+id/top_rated_tv"
@@ -85,15 +108,16 @@
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/home_screen_top_rated_text"
                     android:textColor="@color/white"
-                    android:textSize="22sp"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@id/home_screen_all_top_rated_tv"
+                    app:layout_constraintBottom_toBottomOf="@id/home_screen_all_top_rated_tv"
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/home_screen_all_top_rated_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginEnd="18dp"
                     android:background="@drawable/circular_white_btn"
                     android:fontFamily="sans-serif-medium"
@@ -106,17 +130,19 @@
                     android:textSize="15sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/popular_movies_horizontal_rv"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/top_rated_movies_horizontal_rv"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
                     android:orientation="horizontal"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/top_rated_tv"
+                    app:layout_constraintTop_toBottomOf="@id/home_screen_all_top_rated_tv"
                     tools:itemCount="2"
                     tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/home_screen_top_rated_movies_section_item" />
@@ -147,7 +173,10 @@
                         android:id="@+id/now_playing_movies_horizontal_rv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="15dp"
                         android:orientation="horizontal"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
@@ -230,14 +259,28 @@
                                 app:layout_constraintLeft_toLeftOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 
+                            <TextView
+                                android:id="@+id/trending_movies_day_week_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:layout_marginEnd="4dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/day"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                app:layout_constraintEnd_toStartOf="@id/trending_movies_day_week_switch"
+                                app:layout_constraintTop_toTopOf="parent" />
+
                             <com.google.android.material.switchmaterial.SwitchMaterial
                                 android:id="@+id/trending_movies_day_week_switch"
                                 android:layout_width="wrap_content"
                                 android:layout_height="30dp"
-                                android:layout_marginTop="2dp"
+                                android:layout_marginTop="3dp"
                                 android:layout_marginEnd="18dp"
                                 android:checked="false"
-                                android:textOff="@string/day"
+                                android:textOff=""
+                                android:textOn=""
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:showText="true" />
@@ -259,6 +302,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
+                                android:paddingBottom="20dp"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintLeft_toLeftOf="parent"
                                 app:layout_constraintRight_toRightOf="parent"
@@ -276,14 +320,28 @@
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
 
+                                <TextView
+                                    android:id="@+id/trending_tv_shows_day_week_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:layout_marginEnd="4dp"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:text="@string/day"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp"
+                                    app:layout_constraintEnd_toStartOf="@id/trending_TV_shows_day_week_switch"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
                                 <com.google.android.material.switchmaterial.SwitchMaterial
                                     android:id="@+id/trending_TV_shows_day_week_switch"
                                     android:layout_width="wrap_content"
                                     android:layout_height="30dp"
-                                    android:layout_marginTop="2dp"
+                                    android:layout_marginTop="3dp"
                                     android:layout_marginEnd="18dp"
                                     android:checked="false"
-                                    android:textOff="@string/day"
+                                    android:textOff=""
+                                    android:textOn=""
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
                                     app:showText="true" />
@@ -309,7 +367,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+         <!--   </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,7 +20,7 @@ class TrendingMoviesAdapter :
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): TrendingMoviesItemViewHolder {
         val binding =
             SingleTrendingMovieDayWeekBinding.inflate(
@@ -42,7 +42,8 @@ class TrendingMoviesAdapter :
                 binding.trendingMoviesIv.load("$posterPath${this.posterPath}")
                 binding.trendingMoviesMcv.setOnClickListener {
                     val bundle = Bundle()
-                    bundle.putInt("movie_id", this.popularMovieId!!)
+                    bundle.putLong("movie_id", this.popularMovieId!!)
+                    bundle.putString("type", "Trending Movies")
                     val detailsIntent = Intent(it.context, DetailsScreen::class.java)
                     detailsIntent.putExtras(bundle)
                     Log.d("trendingmovadapter", "detailsIntent: $detailsIntent")
