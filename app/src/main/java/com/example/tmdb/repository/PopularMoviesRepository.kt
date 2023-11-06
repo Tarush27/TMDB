@@ -3,10 +3,12 @@ package com.example.tmdb.repository
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.example.tmdb.model.DetailsResponse
 import com.example.tmdb.model.Genres
 import com.example.tmdb.model.NowPlayingMoviesModel
@@ -89,15 +91,15 @@ class PopularMoviesRepository(
                         )
                     }
 
-//                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
-//                    if (isOfflineEnabled) {
-//                        Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
-//                        movieDb.roomDao().insertMovies(moviesAndTvShowsList)
-//                    } else {
-//                        Log.d("repo", "getPopularMovies: is offline enabled false")
-//
-//                    }
-                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
+                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
+                    if (isOfflineEnabled) {
+                        Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
+                        movieDb.roomDao().insertMovies(moviesAndTvShowsList)
+                    } else {
+                        Log.d("repo", "getPopularMovies: is offline enabled false")
+
+                    }
+//                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
                     _popularMoviesResponse.value = response.body()
                 } else {
                     showEmptyResponseMessage("")
@@ -109,12 +111,12 @@ class PopularMoviesRepository(
 
         } else {
             try {
-//                val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
-//                Log.d("repo", "getPopularMovies: isOfflineEnabled: $isOfflineEnabled")
-//                if (!isOfflineEnabled) {
-//                    _popularMoviesResponse.value = null
-//                    return
-//                }
+                val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
+                Log.d("repo", "getPopularMovies: isOfflineEnabled: $isOfflineEnabled")
+                if (!isOfflineEnabled) {
+                    _popularMoviesResponse.value = null
+                    return
+                }
                 val popularMoviesListFromDb = movieDb.roomDao().getMoviesByType("Popular")
                 Log.d("repo", "getPopularMoviesFromDb: $popularMoviesListFromDb")
                 if (popularMoviesListFromDb.isNotEmpty()) {
@@ -144,12 +146,46 @@ class PopularMoviesRepository(
 
     }
 
-    fun getPopularMoviesPerPage(): Flow<PagingData<PopularMoviesModel>> =
-        Pager(PagingConfig(pageSize = 1, enablePlaceholders = false)) {
+//    suspend fun getPopularMoviesResponsePageWise(): MutableLiveData<List<PopularMoviesModel?>> {
+//        val popularMoviesMutableLiveDataResponse: MutableLiveData<List<PopularMoviesModel?>> =
+//            MutableLiveData()
+//        if (!NetworkState.isInternetAvailable(applicationContext)) {
+//            val popularMoviesListFromDb = movieDb.roomDao().getMoviesByType("Popular")
+//            Log.d("repo", "getPopularMoviesFromDb: $popularMoviesListFromDb")
+//            if (popularMoviesListFromDb.isNotEmpty()) {
+//                val popularMoviesModels = popularMoviesListFromDb.map {
+//                    PopularMoviesModel(
+//                        popularMovieId = it.id,
+//                        posterPath = it.posterPath,
+//                        popularMovieTitle = it.title
+//                    )
+//                } as ArrayList
+//
+////                val popularMoviesResponse = PopularMoviesResponse(
+////                    page = null,
+////                    popularMovies = popularMoviesModels,
+////                    totalPages = null,
+////                    totalResults = null
+////                )
+//
+//                popularMoviesMutableLiveDataResponse.value = popularMoviesModels
+//            } else {
+//                _popularMoviesResponse.value = null
+//            }
+//        }
+//
+//        return popularMoviesMutableLiveDataResponse
+//
+//    }
+
+    fun getPopularMoviesPerPage(): Flow<PagingData<PopularMoviesModel>> {
+        return Pager(PagingConfig(pageSize = 1, enablePlaceholders = false)) {
             ScreensPagingSource(
                 popularMoviesService, ScreenTypes.POPULAR, movieDb, applicationContext
             )
         }.flow
+    }
+
 
     fun getTopRatedMoviesPerPage(): Flow<PagingData<PopularMoviesModel>> =
         Pager(PagingConfig(pageSize = 1, enablePlaceholders = false)) {
@@ -190,14 +226,14 @@ class PopularMoviesRepository(
                     }
 
 
-//                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
-//                    if (isOfflineEnabled) {
-//                        Log.d("repo", "moviesAndTvShowsList offline true: $moviesAndTvShowsList")
-//                        movieDb.roomDao().insertMovies(moviesAndTvShowsList)
-//                    } else {
-//                        Log.d("repo", "getTopRatedMovies: is offline enabled false")
-//                    }
-                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
+                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
+                    if (isOfflineEnabled) {
+                        Log.d("repo", "moviesAndTvShowsList offline true: $moviesAndTvShowsList")
+                        movieDb.roomDao().insertMovies(moviesAndTvShowsList)
+                    } else {
+                        Log.d("repo", "getTopRatedMovies: is offline enabled false")
+                    }
+//                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
                     _topRatedMoviesResponse.value = response.body()
                 } else {
                     showEmptyResponseMessage("")
@@ -208,12 +244,12 @@ class PopularMoviesRepository(
 
         } else {
             try {
-//                val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
-//                Log.d("repo", "getTopRatedMovies: isOfflineEnabled: $isOfflineEnabled")
-//                if (!isOfflineEnabled) {
-//                    _topRatedMoviesResponse.value = null
-//                    return
-//                }
+                val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
+                Log.d("repo", "getTopRatedMovies: isOfflineEnabled: $isOfflineEnabled")
+                if (!isOfflineEnabled) {
+                    _topRatedMoviesResponse.value = null
+                    return
+                }
                 val topRatedMoviesListFromDb = movieDb.roomDao().getMoviesByType(type = "Top rated")
                 Log.d("repo", "getTopRatedMoviesFromDb: $topRatedMoviesListFromDb")
                 if (topRatedMoviesListFromDb.isNotEmpty()) {
@@ -233,7 +269,7 @@ class PopularMoviesRepository(
                     )
                     _topRatedMoviesResponse.value = topRatedMoviesResponse
                 } else {
-                    showEmptyResponseMessage("details fetch failed")
+//                    showEmptyResponseMessage("")
                     _topRatedMoviesResponse.value = null
                 }
 
@@ -257,14 +293,14 @@ class PopularMoviesRepository(
                             movieType = "Upcoming"
                         )
                     }
-//                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
-//                    if (isOfflineEnabled) {
-//                        Log.d("repo", "moviesAndTvShowsList offline true: $moviesAndTvShowsList")
-//                        movieDb.roomDao().insertMovies(moviesAndTvShowsList)
-//                    } else {
-//                        Log.d("repo", "getUpcomingMovies: is offline enabled false")
-//                    }
-                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
+                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
+                    if (isOfflineEnabled) {
+                        Log.d("repo", "moviesAndTvShowsList offline true: $moviesAndTvShowsList")
+                        movieDb.roomDao().insertMovies(moviesAndTvShowsList)
+                    } else {
+                        Log.d("repo", "getUpcomingMovies: is offline enabled false")
+                    }
+//                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
                     _upComingMoviesResponse.value = response.body()
                 } else {
                     showEmptyResponseMessage("")
@@ -277,10 +313,10 @@ class PopularMoviesRepository(
             try {
                 val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
                 Log.d("repo", "getUpcomingMovies: isOfflineEnabled: $isOfflineEnabled")
-//                if (!isOfflineEnabled) {
-//                    _upComingMoviesResponse.value = null
-//                    return
-//                }
+                if (!isOfflineEnabled) {
+                    _upComingMoviesResponse.value = null
+                    return
+                }
                 val upcomingMoviesListFromDb = movieDb.roomDao().getMoviesByType(type = "Upcoming")
                 Log.d("repo", "getUpcomingMoviesFromDb: $upcomingMoviesListFromDb")
                 if (upcomingMoviesListFromDb.isNotEmpty()) {
@@ -327,14 +363,14 @@ class PopularMoviesRepository(
 
                         )
                     }
-//                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
-//                    if (isOfflineEnabled) {
-////                        Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
-//                        movieDb.roomDao().insertMovies(moviesAndTvShowsList)
-//                    } else {
-//                        Log.d("repo", "getPopularMovies: is offline enabled false")
-//                    }
-                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
+                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
+                    if (isOfflineEnabled) {
+//                        Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
+                        movieDb.roomDao().insertMovies(moviesAndTvShowsList)
+                    } else {
+                        Log.d("repo", "getTrending Movies: is offline enabled false")
+                    }
+                    // movieDb.roomDao().insertMovies(moviesAndTvShowsList)
                     _trendingMoviesResponse.value = response.body()
                 } else {
                     showEmptyResponseMessage("")
@@ -347,10 +383,10 @@ class PopularMoviesRepository(
             try {
                 val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
                 Log.d("repo", "getTrendingMoviesDayWise: isOfflineEnabled: $isOfflineEnabled")
-//                if (!isOfflineEnabled) {
-//                    _trendingMoviesResponse.value = null
-//                    return
-//                }
+                if (!isOfflineEnabled) {
+                    _trendingMoviesResponse.value = null
+                    return
+                }
                 if (TimeWindow.DAY.stringAbc() == type) {
                     val trendingMoviesListDayWise = movieDb.roomDao().getTrendingMoviesDayWise(
                         type = "Trending Movies", isDay = 1
@@ -429,30 +465,30 @@ class PopularMoviesRepository(
                             isWeek = isWeek
                         )
                     }
-//                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
-//                    if (isOfflineEnabled) {
-////                        Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
-//                        movieDb.roomDao().insertMovies(moviesAndTvShowsList)
-//                    } else {
-//                        Log.d("repo", "getPopularMovies: is offline enabled false")
-//                    }
-                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
+                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
+                    if (isOfflineEnabled) {
+//                        Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
+                        movieDb.roomDao().insertMovies(moviesAndTvShowsList)
+                    } else {
+                        Log.d("repo", "getPopularMovies: is offline enabled false")
+                    }
+//                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
                     _trendingTVShowsResponse.value = response.body()
                 } else {
                     showEmptyResponseMessage("")
                 }
             } catch (e: Exception) {
-                showExceptionMessage(e.message)
+                e.printStackTrace()
             }
 
         } else {
             try {
                 val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
                 Log.d("repo", "getTrendingTVShowsDayWise: isOfflineEnabled: $isOfflineEnabled")
-//                if (!isOfflineEnabled) {
-//                    _trendingTVShowsResponse.value = null
-//                    return
-//                }
+                if (!isOfflineEnabled) {
+                    _trendingTVShowsResponse.value = null
+                    return
+                }
                 if (TimeWindow.DAY.stringAbc() == type) {
                     val trendingTVShowsListFromDbDayWise = movieDb.roomDao()
                         .getTrendingTVShowsDayWise(type = "Trending TV Shows", isDay = 1)
@@ -535,15 +571,15 @@ class PopularMoviesRepository(
                         originalTitle = detailsResponse.originalTitle,
                         genres = myGenres.joinToString(", ")
                     )
-//                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
-//                    if (isOfflineEnabled) {
-////                        Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
-//                        movieDb.roomDao().insertMoviesAndTvDetails(moviesDetail)
-//                    } else {
-//                        Log.d("repo", "getPopularMovies: is offline enabled false")
-//                    }
+                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
+                    if (isOfflineEnabled) {
+//                        Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
+                        movieDb.roomDao().insertMoviesAndTvDetails(moviesDetail)
+                    } else {
+                        Log.d("repo", "getPopularMovies: is offline enabled false")
+                    }
 
-                    movieDb.roomDao().insertMoviesAndTvDetails(moviesDetail)
+//                    movieDb.roomDao().insertMoviesAndTvDetails(moviesDetail)
                     _movieDetailsResponse.value = moviesDetail
                 } else {
                     showEmptyResponseMessage("")
@@ -557,13 +593,14 @@ class PopularMoviesRepository(
                 val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
                 Log.d("repo", "getMoviesDetails: isOfflineEnabled: $isOfflineEnabled")
                 var moviesDetails = movieDb.roomDao().getMoviesAndTvDetails(id)
-//                if (!isOfflineEnabled) {
-//                    moviesDetails = movieDb.roomDao().getMoviesAndTvDetails(null)
-//                    Log.d("repo", "getMoviesDetails: ${moviesDetails?.voteAverage}")
-//                    if (moviesDetails?.voteAverage == null) {
-//                        _movieDetailsResponse.value = null
-//                    }
-//                }
+                if (!isOfflineEnabled) {
+                    moviesDetails = movieDb.roomDao().getMoviesAndTvDetails(null)
+                    Log.d("repo", "getMoviesDetails: ${moviesDetails?.voteAverage}")
+                    if (moviesDetails?.voteAverage == null) {
+                        _movieDetailsResponse.value = null
+                    }
+                    return
+                }
                 Log.d("repo", "getMoviesDetailsFromDb: $moviesDetails")
                 val genresString = moviesDetails?.genres
                 val genresList = genresString?.split(", ") ?: emptyList()
@@ -624,14 +661,14 @@ class PopularMoviesRepository(
                         originalTitle = trendingTvShowsDetailsResponse.originalName,
                         genres = myGenres.joinToString(", ")
                     )
-//                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
-//                    if (isOfflineEnabled) {
-////                        Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
-//                        movieDb.roomDao().insertMoviesAndTvDetails(trendingTvShowsDetails)
-//                    } else {
-//                        Log.d("repo", "getPopularMovies: is offline enabled false")
-//                    }
-                    movieDb.roomDao().insertMoviesAndTvDetails(trendingTvShowsDetails)
+                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
+                    if (isOfflineEnabled) {
+//                        Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
+                        movieDb.roomDao().insertMoviesAndTvDetails(trendingTvShowsDetails)
+                    } else {
+                        Log.d("repo", "getPopularMovies: is offline enabled false")
+                    }
+//                    movieDb.roomDao().insertMoviesAndTvDetails(trendingTvShowsDetails)
                     _trendingTVShowsDetailsResponse.value = trendingTvShowsDetails
                 } else {
                     showEmptyResponseMessage("")
@@ -644,13 +681,14 @@ class PopularMoviesRepository(
                 val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
                 Log.d("repo", "getTrendingTVShowsDetails: isOfflineEnabled: $isOfflineEnabled")
                 var trendingTVShowsDetails = movieDb.roomDao().getMoviesAndTvDetails(id)
-//                if (!isOfflineEnabled) {
-//                    trendingTVShowsDetails = movieDb.roomDao().getMoviesAndTvDetails(null)
-//                    Log.d("repo", "getMoviesDetails: ${trendingTVShowsDetails?.voteAverage}")
-//                    if (trendingTVShowsDetails?.voteAverage == null) {
-//                        _movieDetailsResponse.value = null
-//                    }
-//                }
+                if (!isOfflineEnabled) {
+                    trendingTVShowsDetails = movieDb.roomDao().getMoviesAndTvDetails(null)
+                    Log.d("repo", "getMoviesDetails: ${trendingTVShowsDetails?.voteAverage}")
+                    if (trendingTVShowsDetails?.voteAverage == null) {
+                        _trendingTVShowsDetailsResponse.value = null
+                    }
+                    return
+                }
                 val genresString = trendingTVShowsDetails?.genres
                 val genresList = genresString?.split(", ") ?: emptyList()
                 val trendingTVShowsDetailsResponse =
@@ -699,14 +737,14 @@ class PopularMoviesRepository(
                             movieType = "Now Playing"
                         )
                     }
-//                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
-//                    if (isOfflineEnabled) {
-//                        Log.d("repo", "moviesAndTvShowsList offline enabled: $isOfflineEnabled")
-//                        movieDb.roomDao().insertMovies(moviesAndTvShowsList)
-//                    } else {
-//                        Log.d("repo", "getNowPlayingMovies: is offline enabled false")
-//                    }
-                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
+                    val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
+                    if (isOfflineEnabled) {
+                        Log.d("repo", "moviesAndTvShowsList offline enabled: $isOfflineEnabled")
+                        movieDb.roomDao().insertMovies(moviesAndTvShowsList)
+                    } else {
+                        Log.d("repo", "getNowPlayingMovies: is offline enabled false")
+                    }
+//                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
                     _nowPlayingMoviesResponse.value = response.body()
                 } else {
                     showEmptyResponseMessage("")
@@ -718,10 +756,10 @@ class PopularMoviesRepository(
             try {
                 val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
                 Log.d("repo", "getNowPlayingMovies: isOfflineEnabled: $isOfflineEnabled")
-//                if (!isOfflineEnabled) {
-//                    _nowPlayingMoviesResponse.value = null
-//                    return
-//                }
+                if (!isOfflineEnabled) {
+                    _nowPlayingMoviesResponse.value = null
+                    return
+                }
                 val nowPlayingMoviesListFromDb =
                     movieDb.roomDao().getMoviesByType(type = "Now Playing")
                 Log.d("repo", "getNowPlayingMoviesDetailsFromDb: $nowPlayingMoviesListFromDb")

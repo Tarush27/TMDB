@@ -73,9 +73,14 @@ class ScreensActivity : BaseThemeActivity() {
 //                }
                 lifecycleScope.launch {
                     Log.d("screensactivity", "before observe: observed...")
-                    popularMoviesViewModel.getPopularMoviesPageWise().collect {
-                        moviesPagingAdapter.submitData(lifecycle, it)
-                    }
+//                    popularMoviesViewModel.getPopularMoviesPageWise().collect {
+//                        moviesPagingAdapter.submitData(lifecycle, it)
+//                    }
+
+                    popularMoviesViewModel.getPopularMoviesPageWise()
+                        .collect {
+                            moviesPagingAdapter.submitData(lifecycle, it)
+                        }
 
                 }
 
@@ -169,8 +174,14 @@ class ScreensActivity : BaseThemeActivity() {
 
     private fun setupPopularMoviesRv() {
 //        moviesAdapter = MoviesAdapter()
-
         moviesPagingAdapter = MoviesPagingAdapter()
+        if (intent.getStringExtra("screenType") == ScreenTypes.POPULAR.popularScreen()) {
+            moviesPagingAdapter.setMovieType(ScreenTypes.POPULAR.popularScreen())
+        } else if (intent.getStringExtra("screenType") == ScreenTypes.TOP_RATED.topRatedScreen()) {
+            moviesPagingAdapter.setMovieType(ScreenTypes.TOP_RATED.topRatedScreen())
+        } else if (intent.getStringExtra("screenType") == ScreenTypes.UPCOMING.upComingScreen()) {
+            moviesPagingAdapter.setMovieType(ScreenTypes.UPCOMING.upComingScreen())
+        }
         binding.screensHorizontalRv.layoutManager = GridLayoutManager(this, 2)
 
         binding.screensHorizontalRv.adapter = moviesPagingAdapter

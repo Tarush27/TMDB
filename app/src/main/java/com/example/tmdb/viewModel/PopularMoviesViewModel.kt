@@ -1,5 +1,6 @@
 package com.example.tmdb.viewModel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -36,10 +37,8 @@ class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesR
     fun getTrendingMovies(isDayOrWeek: Boolean) {
         viewModelScope.launch {
             popularMoviesRepository.getTrendingMovies(
-                (if (isDayOrWeek)
-                    TimeWindow.WEEK
-                else TimeWindow.DAY)
-                    .stringAbc()
+                (if (isDayOrWeek) TimeWindow.WEEK
+                else TimeWindow.DAY).stringAbc()
             )
         }
     }
@@ -49,10 +48,8 @@ class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesR
     fun getTrendingTVShows(isDayOrWeek: Boolean) {
         viewModelScope.launch {
             popularMoviesRepository.getTrendingTVShows(
-                (if (isDayOrWeek)
-                    TimeWindow.WEEK
-                else TimeWindow.DAY)
-                    .stringAbc()
+                (if (isDayOrWeek) TimeWindow.WEEK
+                else TimeWindow.DAY).stringAbc()
             )
         }
     }
@@ -68,8 +65,20 @@ class PopularMoviesViewModel(private val popularMoviesRepository: PopularMoviesR
 
 
     fun getPopularMoviesPageWise(): Flow<PagingData<PopularMoviesModel>> {
+        //check internet
+
+//        val popularMoviesPageWiseResponse = popularMoviesRepository.getPopularMoviesPerPage()
+//        popularMoviesPageWisePagingResponse.value = popularMoviesPageWiseResponse.value
+//        //no internet
+////        return popularMoviesRepository.getPopularMovies()
+//        return popularMoviesPageWiseResponse
+
 
         return popularMoviesRepository.getPopularMoviesPerPage()
+        //no internet
+//        return popularMoviesRepository.getPopularMovies()
+
+
     }
 
     fun getTopRatedMoviesPageWise(): Flow<PagingData<PopularMoviesModel>> {

@@ -13,7 +13,7 @@ object SharedPrefsUtils {
 
     fun getIsOfflineEnabled(context: Context): Boolean {
         val mPrefs = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
-        return mPrefs.getBoolean("is_offline_enabled", false)
+        return mPrefs.getBoolean("is_offline_enabled", true)
     }
 
 
@@ -26,7 +26,7 @@ object SharedPrefsUtils {
 
     fun getIsTrendingEnabled(context: Context): Boolean {
         val mPrefs = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
-        return mPrefs.getBoolean("is_trending_enabled", false)
+        return mPrefs.getBoolean("is_trending_enabled", true)
     }
 
 }

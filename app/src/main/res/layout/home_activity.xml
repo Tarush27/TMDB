@@ -252,21 +252,36 @@
                 android:id="@+id/trending_movies_horizontal_rv"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
+                android:visibility="visible"
                 android:layout_margin="15dp"
                 android:orientation="horizontal"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/trending_movies_tv"
+                app:layout_constraintTop_toBottomOf="@id/trending_movies_day_week_switch"
                 tools:itemCount="2"
                 tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/single_trending_movie_day_week" />
+
+            <TextView
+                android:id="@+id/trending_movies_daw_week_error_msg_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:drawablePadding="5dp"
+                android:textColor="#BDB1B1"
+                android:textSize="11sp"
+                android:visibility="gone"
+                app:drawableRightCompat="@drawable/error"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/trending_movies_horizontal_rv"
+                tools:text="Trending movies day wise details fetched" />
 
             <TextView
                 android:id="@+id/trending_TV_shows_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="18dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/trending_tv_shows_text"
                 android:textColor="@color/white"
@@ -305,13 +320,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_margin="15dp"
+                android:visibility="visible"
                 android:orientation="horizontal"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/trending_TV_shows_tv"
+                app:layout_constraintTop_toBottomOf="@id/trending_TV_shows_day_week_switch"
                 tools:itemCount="2"
                 tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/single_trending_tv_shows_day_week" />
+
+            <TextView
+                android:id="@+id/trending_tv_shows_daw_week_error_msg_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:drawablePadding="5dp"
+                android:textColor="#BDB1B1"
+                android:textSize="11sp"
+                android:visibility="gone"
+                app:drawableRightCompat="@drawable/error"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/trending_TV_shows_horizontal_rv"
+                tools:text="Trending tv shows day wise details fetched" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

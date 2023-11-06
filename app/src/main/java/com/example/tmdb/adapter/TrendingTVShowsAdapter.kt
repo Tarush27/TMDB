@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.example.tmdb.R
 import com.example.tmdb.databinding.SingleTrendingTvShowsDayWeekBinding
 import com.example.tmdb.model.PopularMoviesModel
 import com.example.tmdb.model.TrendingTVShowsModel
@@ -40,7 +42,14 @@ class TrendingTVShowsAdapter :
         val posterPath = "https://image.tmdb.org/t/p/w500"
         with(holder) {
             with(popularMovie) {
-                binding.trendingTVShowsIv.load("$posterPath${this.trendingTVShowPosterPath}")
+                binding.trendingTVShowsIv.load("$posterPath${this.trendingTVShowPosterPath}") {
+                    error(
+                        ContextCompat.getDrawable(
+                            itemView.context,
+                            R.drawable.ic_connection_error
+                        )
+                    )
+                }
                 binding.trendingTVShowsTv.text = this.trendingTVShowName
                 binding.trendingTVShowsMcv.setOnClickListener {
                     val bundle = Bundle()

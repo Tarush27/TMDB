@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.size
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.MovieApplication
@@ -16,7 +14,6 @@ import com.example.tmdb.adapter.NowPlayingMoviesAdapter
 import com.example.tmdb.adapter.TrendingMoviesAdapter
 import com.example.tmdb.adapter.TrendingTVShowsAdapter
 import com.example.tmdb.databinding.HomeActivityBinding
-import com.example.tmdb.databinding.HomeScreenActivityBinding
 import com.example.tmdb.model.PopularMoviesModel
 import com.example.tmdb.networking.PopularMoviesService
 import com.example.tmdb.networking.RetrofitClient
@@ -41,19 +38,21 @@ class HomeScreenActivity : BaseThemeActivity() {
         setContentView(binding.root)
 
 
-//        val isTrendingSectionEnabled = SharedPrefsUtils.getIsTrendingEnabled(this)
-//        if (!isTrendingSectionEnabled) {
-//            binding.trendingMoviesDayWeekSwitch.visibility = View.GONE
-//            binding.trendingMoviesHorizontalRv.visibility = View.GONE
-//            binding.trendingMoviesTv.visibility = View.GONE
-//
-//            binding.trendingTVShowsDayWeekSwitch.visibility = View.GONE
-//            binding.trendingTVShowsHorizontalRv.visibility = View.GONE
-//            binding.trendingTVShowsTv.visibility = View.GONE
-//
-//            binding.trendingMoviesDayWeekText.visibility = View.GONE
-//            binding.trendingTvShowsDayWeekText.visibility = View.GONE
-//        }
+        val isTrendingSectionEnabled = SharedPrefsUtils.getIsTrendingEnabled(this)
+        if (!isTrendingSectionEnabled) {
+            binding.trendingMoviesDayWeekSwitch.visibility = View.GONE
+            binding.trendingMoviesHorizontalRv.visibility = View.GONE
+            binding.trendingMoviesTv.visibility = View.GONE
+            binding.trendingTvShowsDawWeekErrorMsgTv.visibility = View.GONE
+            binding.trendingMoviesDawWeekErrorMsgTv.visibility = View.GONE
+
+            binding.trendingTVShowsDayWeekSwitch.visibility = View.GONE
+            binding.trendingTVShowsHorizontalRv.visibility = View.GONE
+            binding.trendingTVShowsTv.visibility = View.GONE
+
+            binding.trendingMoviesDayWeekText.visibility = View.GONE
+            binding.trendingTvShowsDayWeekText.visibility = View.GONE
+        }
         binding.homeScreenAllPopularTv.setOnClickListener {
             val intent = Intent(this, ScreensActivity::class.java)
             intent.putExtra("screenType", "Popular")
@@ -150,11 +149,24 @@ class HomeScreenActivity : BaseThemeActivity() {
         popularMoviesViewModel.getTrendingMovies.observe(this) { response ->
             setupTrendingMoviesDayWeekRv()
             if (response == null) {
-//                binding.noInternet.root.visibility = View.VISIBLE
-//                binding.nestedScrollView.visibility = View.GONE
                 binding.trendingMoviesHorizontalRv.visibility = View.GONE
-                Toast.makeText(this, "Trending Movies fetch failed", Toast.LENGTH_SHORT).show()
+                val isTrendingMoviesDayWeekSwitchChecked =
+                    binding.trendingMoviesDayWeekSwitch.isChecked
+                if (isTrendingMoviesDayWeekSwitchChecked) {
+                    binding.trendingMoviesDawWeekErrorMsgTv.text =
+                        "Trending movies week wise details fetched"
+                    binding.trendingMoviesDawWeekErrorMsgTv.visibility = View.VISIBLE
+                } else {
+                    binding.trendingMoviesDawWeekErrorMsgTv.text =
+                        "Trending movies day wise details fetched"
+                    binding.trendingMoviesDawWeekErrorMsgTv.visibility = View.VISIBLE
+                }
+
+
             } else {
+                binding.trendingMoviesHorizontalRv.visibility = View.VISIBLE
+                binding.trendingMoviesDawWeekErrorMsgTv.text = ""
+                binding.trendingMoviesDawWeekErrorMsgTv.visibility = View.GONE
                 val trendingMovies = response.popularMovies
                 Log.d("HSAtrendingmovies", "trendingMovies:$trendingMovies")
                 trendingMoviesAdapter.updateTrendingMoviesList(trendingMovies as ArrayList<PopularMoviesModel>)
@@ -168,30 +180,14 @@ class HomeScreenActivity : BaseThemeActivity() {
             if (isChecked) {
                 binding.trendingMoviesDayWeekText.text = "Week"
                 popularMoviesViewModel.getTrendingMovies(true)
-                popularMoviesViewModel.getTrendingMovies.observe(this) {
-                    setupTrendingMoviesDayWeekRv()
-                    if (it == null) {
-                        binding.trendingMoviesHorizontalRv.visibility = View.GONE
-                    } else {
-                        trendingMoviesAdapter.updateTrendingMoviesList(it.popularMovies as ArrayList<PopularMoviesModel>)
-                    }
 
-                }
             } else {
-//                binding.trendingMoviesDayWeekSwitch.text = "Day"
                 binding.trendingMoviesDayWeekText.text = "Day"
                 popularMoviesViewModel.getTrendingMovies(false)
-                popularMoviesViewModel.getTrendingMovies.observe(this) {
-                    setupTrendingMoviesDayWeekRv()
-                    if (it == null) {
-                        binding.trendingMoviesHorizontalRv.visibility = View.GONE
-                    } else {
-                        trendingMoviesAdapter.updateTrendingMoviesList(it.popularMovies as ArrayList<PopularMoviesModel>)
-                    }
 
-                }
             }
         }
+
 
         popularMoviesViewModel.getTrendingTVShows(false)
 
@@ -199,8 +195,23 @@ class HomeScreenActivity : BaseThemeActivity() {
             setupTrendingTVShowsDayWeekRv()
             if (response == null) {
                 binding.trendingTVShowsHorizontalRv.visibility = View.GONE
-                Toast.makeText(this, "Trending TV Shows fetch failed", Toast.LENGTH_SHORT).show()
+
+                val isTrendingTVShowsDayWeekSwitchChecked =
+                    binding.trendingTVShowsDayWeekSwitch.isChecked
+                if (isTrendingTVShowsDayWeekSwitchChecked) {
+                    binding.trendingTvShowsDawWeekErrorMsgTv.text =
+                        "Trending TV Shows week wise details fetched"
+                    binding.trendingTvShowsDawWeekErrorMsgTv.visibility = View.VISIBLE
+                } else {
+                    binding.trendingTvShowsDawWeekErrorMsgTv.text =
+                        "Trending TV Shows day wise details fetched"
+                    binding.trendingTvShowsDawWeekErrorMsgTv.visibility = View.VISIBLE
+                }
+
             } else {
+                binding.trendingTVShowsHorizontalRv.visibility = View.VISIBLE
+                binding.trendingTvShowsDawWeekErrorMsgTv.text = ""
+                binding.trendingTvShowsDawWeekErrorMsgTv.visibility = View.GONE
                 val trendingTVShows = response.trendingTVShows
                 Log.d("HSAtrendingtvshow", "trendingTVShows:$trendingTVShows")
                 trendingTVShowsAdapter.updateTrendingTVShowsList(trendingTVShows)
@@ -212,28 +223,10 @@ class HomeScreenActivity : BaseThemeActivity() {
             if (isChecked) {
                 binding.trendingTvShowsDayWeekText.text = "Week"
                 popularMoviesViewModel.getTrendingTVShows(true)
-                popularMoviesViewModel.getTrendingTVShows.observe(this) {
-                    setupTrendingTVShowsDayWeekRv()
-                    if (it == null) {
-                        binding.trendingTVShowsHorizontalRv.visibility = View.GONE
-                    } else {
-                        trendingTVShowsAdapter.updateTrendingTVShowsList(it.trendingTVShows)
-                    }
-
-                }
             } else {
-//                binding.trendingMoviesDayWeekSwitch.text = "Day"
                 binding.trendingTvShowsDayWeekText.text = "Day"
                 popularMoviesViewModel.getTrendingTVShows(false)
-                popularMoviesViewModel.getTrendingTVShows.observe(this) {
-                    setupTrendingTVShowsDayWeekRv()
-                    if (it == null) {
-                        binding.trendingTVShowsHorizontalRv.visibility = View.GONE
-                    } else {
-                        trendingTVShowsAdapter.updateTrendingTVShowsList(it.trendingTVShows)
-                    }
 
-                }
             }
         }
 

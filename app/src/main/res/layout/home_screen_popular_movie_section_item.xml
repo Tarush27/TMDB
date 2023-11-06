@@ -23,7 +23,7 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/image"
             android:scaleType="centerCrop"
-            tools:src="@drawable/image" />
+            tools:src="@drawable/ic_connection_error" />
     </com.google.android.material.card.MaterialCardView>
 
     <TextView

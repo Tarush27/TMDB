@@ -2,8 +2,10 @@ package com.example.tmdb.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.example.tmdb.R
 import com.example.tmdb.databinding.NowPlayingMoviesSectionItemBinding
 import com.example.tmdb.model.NowPlayingMoviesModel
 
@@ -43,26 +45,24 @@ class NowPlayingMoviesAdapter :
         val posterPath = "https://image.tmdb.org/t/p/w342"
         val backDropPath = "https://image.tmdb.org/t/p/w500"
         with(holder) {
-//            val layoutParams = holder.itemView.layoutParams
-//            if (layoutParams is MarginLayoutParams) {
-//                // Calculate the new width with a 70% reduction
-//                val originalWidth = layoutParams.width
-//                Log.d("adap", "onBindViewHolder ow: $originalWidth")
-//                val reducedWidth = (originalWidth * 0.3).toInt() // 70% reduction
-//                Log.d("adap", "onBindViewHolder rw: $reducedWidth")
-//                // Set the new width
-//                layoutParams.width = reducedWidth
-//
-//                // Apply the updated layout params
-//                holder.itemView.layoutParams = layoutParams
-//            }
-
-//            this.itemView.layoutParams.width =  itemView.measuredWidth - 20
-
             with(nowPlayingMovie) {
                 binding.nowPlayingMovTitle.text = this.nowPlayingMovieTitle
-                binding.nowPlayingMovPosterIv.load("$posterPath${this.posterPath}")
-                binding.movieBackdropIv.load("$backDropPath${this.backdrop_path}")
+                binding.nowPlayingMovPosterIv.load("$posterPath${this.posterPath}") {
+                    error(
+                        ContextCompat.getDrawable(
+                            itemView.context,
+                            R.drawable.ic_connection_error_now_playing
+                        )
+                    )
+                }
+                binding.movieBackdropIv.load("$backDropPath${this.backdrop_path}") {
+                    error(
+                        ContextCompat.getDrawable(
+                            itemView.context,
+                            R.drawable.ic_connection_error_now_playing_mcv
+                        )
+                    )
+                }
                 binding.nowPlayingMovOverview.text = this.nowPlayingMovieOverview!!.trim()
             }
         }

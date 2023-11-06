@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.bumptech.glide.Glide
+import com.example.tmdb.R
 import com.example.tmdb.databinding.SingleHomeScreenMovieItemBinding
 import com.example.tmdb.model.PopularMoviesModel
 import com.example.tmdb.ui.DetailsScreen
@@ -49,7 +52,10 @@ class HomeScreenMoviesAdapter :
                 binding.homeScreenMovieTv.text = this.popularMovieTitle
                 binding.homeScreenMovieIv.load(
                     "$homeScreenMoviePosterPath${this.posterPath}"
-                )
+                ){
+//                    placeholder(R.drawable.ic_connection_error)
+                    error(ContextCompat.getDrawable(itemView.context,R.drawable.ic_connection_error))
+                }
                 binding.homeScreenMoviesMcv.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putLong("movie_id", this.popularMovieId!!)

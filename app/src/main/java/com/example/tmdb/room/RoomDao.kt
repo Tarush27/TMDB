@@ -11,6 +11,9 @@ interface RoomDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertMovies(movies: List<MoviesAndTv>)
 
+    @Query("SELECT * FROM moviesAndTv where movieType=:type")
+    suspend fun getPagedList(type: String): List<MoviesAndTv>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMoviesAndTvDetails(movies: MoviesAndTv)
 
@@ -18,7 +21,7 @@ interface RoomDao {
     suspend fun getMoviesByType(type: String): List<MoviesAndTv>
 
     @Query("select * from moviesAndTv where id=:movieId")
-    suspend fun getMoviesAndTvDetails(movieId: kotlin.Long?): MoviesAndTv?
+    suspend fun getMoviesAndTvDetails(movieId: Long?): MoviesAndTv?
 
     @Query("select * from moviesAndTv where movieType =:type and isDay=:isDay")
     suspend fun getTrendingMoviesDayWise(

@@ -1,6 +1,7 @@
 package com.example
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import com.example.tmdb.room.MovieDb
 import com.example.tmdb.utils.SharedPrefsUtils
@@ -13,6 +14,18 @@ private const val IS_OFFLINE_ENABLED = "is_offline_enabled"
 private const val IS_TRENDING_ENABLED = "trending_enabled"
 
 class MovieApplication : Application() {
+    init {
+        instance = this
+    }
+
+    companion object {
+        private var instance: MovieApplication? = null
+
+        fun applicationContext(): Context {
+            return instance!!.applicationContext
+        }
+    }
+
     lateinit var movieDatabase: MovieDb
     private lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
     override fun onCreate() {
@@ -51,7 +64,6 @@ class MovieApplication : Application() {
 //        Log.d("app", "onCreate: isOfflineEnabled $c")
 //        return c
 //    }
-
 
 
 }

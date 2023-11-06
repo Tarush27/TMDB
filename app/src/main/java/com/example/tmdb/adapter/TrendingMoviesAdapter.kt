@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.example.tmdb.R
 import com.example.tmdb.databinding.SingleTrendingMovieDayWeekBinding
 import com.example.tmdb.model.PopularMoviesModel
 import com.example.tmdb.ui.DetailsScreen
@@ -39,7 +41,14 @@ class TrendingMoviesAdapter :
         with(holder) {
             with(popularMovie) {
                 binding.trendingMoviesTv.text = this.popularMovieTitle
-                binding.trendingMoviesIv.load("$posterPath${this.posterPath}")
+                binding.trendingMoviesIv.load("$posterPath${this.posterPath}"){
+                    error(
+                        ContextCompat.getDrawable(
+                            itemView.context,
+                            R.drawable.ic_connection_error
+                        )
+                    )
+                }
                 binding.trendingMoviesMcv.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putLong("movie_id", this.popularMovieId!!)

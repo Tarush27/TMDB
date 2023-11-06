@@ -5,12 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterInside
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.tmdb.R
 import com.example.tmdb.databinding.ScreensItemBinding
 import com.example.tmdb.model.PopularMoviesModel
 import com.example.tmdb.ui.DetailsScreen
@@ -23,6 +24,12 @@ class MoviesPagingAdapter :
     inner class PopularMoviesItemViewHolder(val binding: ScreensItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
+    var type: String = ""
+
+    fun setMovieType(movieType: String) {
+        type = movieType
+        Log.d("moviespagingadapter", "setMovieType: $type")
+    }
 
     override fun onBindViewHolder(holder: PopularMoviesItemViewHolder, position: Int) {
         val movie = getItem(position)!!
@@ -31,14 +38,22 @@ class MoviesPagingAdapter :
             setIsRecyclable(false)
             with(movie) {
                 binding.screensTv.text = this.popularMovieTitle
-//                binding.screensIv.load("$posterPath${this.posterPath}"){
-//                    transformations(RoundedCornersTransformation(35f))
-//                }
-                Glide.with(itemView.context).load("$posterPath${this.posterPath}").apply {
-                }.into(binding.screensIv)
+//                Glide.with(itemView.context).load("$posterPath${this.posterPath}").apply {
+//                }.into(binding.screensIv)
+
+                binding.screensIv.load("$posterPath${this.posterPath}") {
+                    error(
+                        ContextCompat.getDrawable(
+                            itemView.context,
+                            R.drawable.ic_connection_error
+                        )
+                    )
+                }
                 binding.screensMcv.setOnClickListener {
                     val bundle = Bundle()
+                    Log.d("movpagingadapter", "movie_id: $popularMovieId")
                     bundle.putLong("movie_id", this.popularMovieId!!)
+                    bundle.putString("type", type)
                     val detailsIntent =
                         Intent(it.context, DetailsScreen::class.java)
                     detailsIntent.putExtras(bundle)
@@ -62,7 +77,7 @@ class MoviesPagingAdapter :
     object MovieComparator : DiffUtil.ItemCallback<PopularMoviesModel>() {
         override fun areItemsTheSame(
             oldItem: PopularMoviesModel,
-            newItem: PopularMoviesModel
+            newItem: PopularMoviesModel,
         ): Boolean {
             // Id is unique.
             return oldItem.popularMovieId == newItem.popularMovieId
@@ -70,7 +85,7 @@ class MoviesPagingAdapter :
 
         override fun areContentsTheSame(
             oldItem: PopularMoviesModel,
-            newItem: PopularMoviesModel
+            newItem: PopularMoviesModel,
         ): Boolean {
             return oldItem == newItem
         }

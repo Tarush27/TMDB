@@ -53,7 +53,7 @@
             android:layout_height="120dp"
             android:contentDescription="@string/image"
             android:scaleType="centerCrop"
-            tools:src="@drawable/sofp" />
+            tools:src="@drawable/ic_connection_error_now_playing" />
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.cardview.widget.CardView
