@@ -75,7 +75,7 @@ class ScreensPagingSource(
             val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
             if (!isOfflineEnabled) {
                 Toast.makeText(
-                    applicationContext, "You are offline! Error loading movies", Toast.LENGTH_LONG
+                    applicationContext, "You are offline! Error loading movies, Please enable wifi.", Toast.LENGTH_LONG
                 ).show()
                 val e = Exception()
                 return LoadResult.Error(e)
