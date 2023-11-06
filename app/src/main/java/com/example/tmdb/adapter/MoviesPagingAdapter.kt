@@ -10,14 +10,14 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.bumptech.glide.Glide
 import com.example.tmdb.R
 import com.example.tmdb.databinding.ScreensItemBinding
-import com.example.tmdb.model.PopularMoviesModel
+import com.example.tmdb.model.MoviesModel
 import com.example.tmdb.ui.DetailsScreen
+import com.example.tmdb.utils.MoviesUtils
 
 class MoviesPagingAdapter :
-    PagingDataAdapter<PopularMoviesModel, MoviesPagingAdapter.PopularMoviesItemViewHolder>(
+    PagingDataAdapter<MoviesModel, MoviesPagingAdapter.PopularMoviesItemViewHolder>(
         MovieComparator
     ) {
 
@@ -33,21 +33,27 @@ class MoviesPagingAdapter :
 
     override fun onBindViewHolder(holder: PopularMoviesItemViewHolder, position: Int) {
         val movie = getItem(position)!!
-        val posterPath = "https://image.tmdb.org/t/p/original"
         with(holder) {
             setIsRecyclable(false)
             with(movie) {
                 binding.screensTv.text = this.popularMovieTitle
-//                Glide.with(itemView.context).load("$posterPath${this.posterPath}").apply {
-//                }.into(binding.screensIv)
-
-                binding.screensIv.load("$posterPath${this.posterPath}") {
-                    error(
-                        ContextCompat.getDrawable(
-                            itemView.context,
-                            R.drawable.ic_connection_error
+                binding.screensIv.load("${MoviesUtils.MOVIES_PAGING_SCREEN_BASE_POSTER_PATH}${this.posterPath}") {
+                    try {
+                        error(
+                            ContextCompat.getDrawable(
+                                itemView.context,
+                                R.drawable.ic_connection_error
+                            )
                         )
-                    )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+//                    error(
+//                        ContextCompat.getDrawable(
+//                            itemView.context,
+//                            R.drawable.ic_connection_error
+//                        )
+//                    )
                 }
                 binding.screensMcv.setOnClickListener {
                     val bundle = Bundle()
@@ -74,18 +80,18 @@ class MoviesPagingAdapter :
         return PopularMoviesItemViewHolder(binding)
     }
 
-    object MovieComparator : DiffUtil.ItemCallback<PopularMoviesModel>() {
+    object MovieComparator : DiffUtil.ItemCallback<MoviesModel>() {
         override fun areItemsTheSame(
-            oldItem: PopularMoviesModel,
-            newItem: PopularMoviesModel,
+            oldItem: MoviesModel,
+            newItem: MoviesModel,
         ): Boolean {
             // Id is unique.
             return oldItem.popularMovieId == newItem.popularMovieId
         }
 
         override fun areContentsTheSame(
-            oldItem: PopularMoviesModel,
-            newItem: PopularMoviesModel,
+            oldItem: MoviesModel,
+            newItem: MoviesModel,
         ): Boolean {
             return oldItem == newItem
         }

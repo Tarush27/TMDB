@@ -4,7 +4,7 @@ enum class TimeWindow {
     DAY, WEEK
 }
 
-fun TimeWindow.stringAbc() = when(this){
+fun TimeWindow.convertToDayWeekString() = when(this){
     TimeWindow.DAY -> "day"
     TimeWindow.WEEK -> "week"
 }

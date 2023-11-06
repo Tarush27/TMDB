@@ -12,4 +12,15 @@
     <string name="popular_movie_image">Popular Movie Image</string>
     <string name="image">popular_movie_image\n</string>
     <string name="day">Day</string>
+    <string name="trending_movies_week_wise_details">Trending movies week wise list fetch failed</string>
+    <string name="trending_movies_day_wise_details">Trending movies day wise list fetch failed</string>
+    <string name="trending_movies_week_text">Week</string>
+    <string name="trending_movies_day_text">Day</string>
+    <string name="trending_tv_shows_week_wise_details">Trending TV Shows week wise list fetch failed</string>
+    <string name="trending_tv_shows_day_wise_details">Trending TV Shows day wise list fetch failed</string>
+    <string name="trending_tv_shows_week_text">Week</string>
+    <string name="trending_tv_shows_day_text">Day</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top rated</string>
+    <string name="upcoming">Upcoming</string>
 </resources>

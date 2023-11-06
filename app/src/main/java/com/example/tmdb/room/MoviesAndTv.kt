@@ -20,14 +20,4 @@ data class MoviesAndTv(
     @ColumnInfo("isWeek") var isWeek: Int = 0,
     @ColumnInfo("orgTitle") var originalTitle: String? = null,
     @ColumnInfo("genre") var genres: String? = null,
-    /*@ColumnInfo("genres") var genres: ArrayList<Genres> = arrayListOf()*/
-    /*@ColumnInfo("trendingTVShowPosterPath") var trendingTVShowPosterPath: String? = null,
-    @ColumnInfo("trendingTVShowName") var trendingTVShowName: String? = null,
-    @ColumnInfo("trendingTVShowOverview") var trendingTVShowOverview: String? = null,
-    @ColumnInfo("trendingTVShowOrgLanguage") var trendingTVShowOrgLanguage: String? = null,
-    @ColumnInfo("trendingTVShowReleaseDate") var trendingTVShowReleaseDate: String? = null,
-    @ColumnInfo("trendingTVShowTagline") var trendingTVShowTagline: String? = null,
-    @ColumnInfo("trendingTVShowVoteAverage") var trendingTVShowVoteAverage: String? = null,
-    @ColumnInfo("trendingTVShowBackdropPath") var trendingTVShowBackdropPath: String? = null,
-    @ColumnInfo("trendingTVShowGenres") var trendingTVShowGenres: ArrayList<Genres> = arrayListOf()*/
 )

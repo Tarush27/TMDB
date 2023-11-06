@@ -5,8 +5,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.tmdb.model.PopularMoviesModel
-import com.example.tmdb.networking.PopularMoviesService
+import com.example.tmdb.model.MoviesModel
+import com.example.tmdb.networking.MoviesService
 import com.example.tmdb.room.MovieDb
 import com.example.tmdb.room.MoviesAndTv
 import com.example.tmdb.utils.NetworkState
@@ -18,14 +18,13 @@ private const val LOAD_DELAY_MILLIS = 3_000L
 private val CURRENT_PAGE = 1
 
 class ScreensPagingSource(
-    /*private val popularMoviesRepository: PopularMoviesRepository*/
-    private val service: PopularMoviesService,
+    private val service: MoviesService,
     private val screenTypes: ScreenTypes,
     private val movieDb: MovieDb,
     private val applicationContext: Context,
-) : PagingSource<Int, PopularMoviesModel>() {
+) : PagingSource<Int, MoviesModel>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PopularMoviesModel> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MoviesModel> {
         if (NetworkState.isInternetAvailable(applicationContext)) {
             try {
                 val currentPage = params.key ?: CURRENT_PAGE
@@ -49,12 +48,10 @@ class ScreensPagingSource(
 
                     ScreenTypes.UPCOMING -> insertUpcomingMoviesDataToMoviesAndTv(data)
                 }
-//                val movies = insertPopularMoviesDataToMoviesAndTv(data)
                 Log.d("screenspagingsourceon", "data: $data")
                 Log.d("screenspagingsourceon", "movies: $movies")
                 val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
                 if (isOfflineEnabled) {
-//                Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
                     movieDb.roomDao().insertMovies(movies)
                 } else {
                     Log.d("screenspagingsource", "offline not enabled ")
@@ -86,13 +83,13 @@ class ScreensPagingSource(
             val movieTypesFromDb = when (screenTypes) {
 
                 ScreenTypes.POPULAR -> movieDb.roomDao()
-                    .getPagedList(type = "Popular")
+                    .getMoviesList(type = "Popular")
 
                 ScreenTypes.TOP_RATED -> movieDb.roomDao()
-                    .getPagedList(type = "Top rated")
+                    .getMoviesList(type = "Top rated")
 
                 ScreenTypes.UPCOMING -> movieDb.roomDao()
-                    .getPagedList(type = "Upcoming")
+                    .getMoviesList(type = "Upcoming")
             }
             Log.d("screenpagmovdb", "movieTypesFromDb: $movieTypesFromDb")
             val movies = insertMoviesAndTvToPopularMovies(movieTypesFromDb)
@@ -115,17 +112,12 @@ class ScreensPagingSource(
     }
 
 
-    override fun getRefreshKey(state: PagingState<Int, PopularMoviesModel>): Int? {
-
-//        return state.anchorPosition?.let { anchorPosition ->
-//            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-//                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
-//        }
+    override fun getRefreshKey(state: PagingState<Int, MoviesModel>): Int? {
 
         return null
     }
 
-    private fun insertPopularMoviesDataToMoviesAndTv(popularMovies: List<PopularMoviesModel>): List<MoviesAndTv> {
+    private fun insertPopularMoviesDataToMoviesAndTv(popularMovies: List<MoviesModel>): List<MoviesAndTv> {
 
 
         val popularMovies = popularMovies.map {
@@ -137,7 +129,7 @@ class ScreensPagingSource(
         return popularMovies
     }
 
-    private fun insertTopRatedMoviesDataToMoviesAndTv(popularMovies: List<PopularMoviesModel>): List<MoviesAndTv> {
+    private fun insertTopRatedMoviesDataToMoviesAndTv(popularMovies: List<MoviesModel>): List<MoviesAndTv> {
 
 
         val topRatedMovies = popularMovies.map {
@@ -149,7 +141,7 @@ class ScreensPagingSource(
         return topRatedMovies
     }
 
-    private fun insertUpcomingMoviesDataToMoviesAndTv(popularMovies: List<PopularMoviesModel>): List<MoviesAndTv> {
+    private fun insertUpcomingMoviesDataToMoviesAndTv(popularMovies: List<MoviesModel>): List<MoviesAndTv> {
 
 
         val upcomingMovies = popularMovies.map {
@@ -161,10 +153,10 @@ class ScreensPagingSource(
         return upcomingMovies
     }
 
-    private fun insertMoviesAndTvToPopularMovies(moviesAndTv: List<MoviesAndTv>): List<PopularMoviesModel> {
+    private fun insertMoviesAndTvToPopularMovies(moviesAndTv: List<MoviesAndTv>): List<MoviesModel> {
 
         val popularMovies = moviesAndTv.map {
-            PopularMoviesModel(
+            MoviesModel(
                 popularMovieTitle = it.title!!, posterPath = it.posterPath, popularMovieId = it.id
             )
         }

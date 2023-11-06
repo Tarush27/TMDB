@@ -10,15 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.tmdb.R
 import com.example.tmdb.databinding.SingleTrendingMovieDayWeekBinding
-import com.example.tmdb.model.PopularMoviesModel
+import com.example.tmdb.model.MoviesModel
 import com.example.tmdb.ui.DetailsScreen
+import com.example.tmdb.utils.MoviesUtils
 
 class TrendingMoviesAdapter :
     RecyclerView.Adapter<TrendingMoviesAdapter.TrendingMoviesItemViewHolder>() {
     inner class TrendingMoviesItemViewHolder(val binding: SingleTrendingMovieDayWeekBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    private val trendingMovies: ArrayList<PopularMoviesModel> = arrayListOf()
+    private val trendingMovies: ArrayList<MoviesModel> = arrayListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -37,17 +38,28 @@ class TrendingMoviesAdapter :
 
     override fun onBindViewHolder(holder: TrendingMoviesItemViewHolder, position: Int) {
         val popularMovie = trendingMovies[position]
-        val posterPath = "https://image.tmdb.org/t/p/w500"
         with(holder) {
             with(popularMovie) {
                 binding.trendingMoviesTv.text = this.popularMovieTitle
-                binding.trendingMoviesIv.load("$posterPath${this.posterPath}"){
-                    error(
-                        ContextCompat.getDrawable(
-                            itemView.context,
-                            R.drawable.ic_connection_error
+                binding.trendingMoviesIv.load("${MoviesUtils.BASE_POSTER_PATH}${this.posterPath}") {
+                    try {
+                        error(
+                            ContextCompat.getDrawable(
+                                itemView.context,
+                                R.drawable.ic_connection_error
+                            )
                         )
-                    )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+//                    error(
+//                        ContextCompat.getDrawable(
+//                            itemView.context,
+//                            R.drawable.ic_connection_error
+//                        )
+//                    )
+
                 }
                 binding.trendingMoviesMcv.setOnClickListener {
                     val bundle = Bundle()
@@ -63,7 +75,7 @@ class TrendingMoviesAdapter :
 
     }
 
-    fun updateTrendingMoviesList(updatedPopularMovies: ArrayList<PopularMoviesModel>) {
+    fun updateTrendingMoviesList(updatedPopularMovies: ArrayList<MoviesModel>) {
         trendingMovies.clear()
         trendingMovies.addAll(updatedPopularMovies)
         notifyDataSetChanged()

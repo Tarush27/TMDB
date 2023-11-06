@@ -12,7 +12,7 @@ interface RoomDao {
     suspend fun insertMovies(movies: List<MoviesAndTv>)
 
     @Query("SELECT * FROM moviesAndTv where movieType=:type")
-    suspend fun getPagedList(type: String): List<MoviesAndTv>
+    suspend fun getMoviesList(type: String): List<MoviesAndTv>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMoviesAndTvDetails(movies: MoviesAndTv)

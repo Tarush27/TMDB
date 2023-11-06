@@ -1,12 +1,11 @@
-package com.example.tmdb
+package com.example.tmdb.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import com.example.tmdb.ui.BaseThemeActivity
-import com.example.tmdb.ui.HomeScreenActivity
+import com.example.tmdb.R
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseThemeActivity() {

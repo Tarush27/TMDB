@@ -10,10 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.tmdb.R
 import com.example.tmdb.databinding.SingleTrendingTvShowsDayWeekBinding
-import com.example.tmdb.model.PopularMoviesModel
 import com.example.tmdb.model.TrendingTVShowsModel
-import com.example.tmdb.ui.DetailsScreen
 import com.example.tmdb.ui.TrendingTvShowsDetailsScreen
+import com.example.tmdb.utils.MoviesUtils
 
 class TrendingTVShowsAdapter :
     RecyclerView.Adapter<TrendingTVShowsAdapter.TrendingTVShowsItemViewHolder>() {
@@ -39,16 +38,25 @@ class TrendingTVShowsAdapter :
 
     override fun onBindViewHolder(holder: TrendingTVShowsItemViewHolder, position: Int) {
         val popularMovie = trendingTVShows[position]
-        val posterPath = "https://image.tmdb.org/t/p/w500"
         with(holder) {
             with(popularMovie) {
-                binding.trendingTVShowsIv.load("$posterPath${this.trendingTVShowPosterPath}") {
-                    error(
-                        ContextCompat.getDrawable(
-                            itemView.context,
-                            R.drawable.ic_connection_error
+                binding.trendingTVShowsIv.load("${MoviesUtils.BASE_POSTER_PATH}${this.trendingTVShowPosterPath}") {
+                    try {
+                        error(
+                            ContextCompat.getDrawable(
+                                itemView.context,
+                                R.drawable.ic_connection_error
+                            )
                         )
-                    )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+//                    error(
+//                        ContextCompat.getDrawable(
+//                            itemView.context,
+//                            R.drawable.ic_connection_error
+//                        )
+//                    )
                 }
                 binding.trendingTVShowsTv.text = this.trendingTVShowName
                 binding.trendingTVShowsMcv.setOnClickListener {

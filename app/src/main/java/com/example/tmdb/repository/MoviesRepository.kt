@@ -3,23 +3,21 @@ package com.example.tmdb.repository
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.liveData
 import com.example.tmdb.model.DetailsResponse
 import com.example.tmdb.model.Genres
+import com.example.tmdb.model.MoviesModel
 import com.example.tmdb.model.NowPlayingMoviesModel
 import com.example.tmdb.model.NowPlayingMoviesResponse
-import com.example.tmdb.model.PopularMoviesModel
-import com.example.tmdb.model.PopularMoviesResponse
+import com.example.tmdb.model.MoviesResponse
 import com.example.tmdb.model.TrendingTVShowsDetailsResponse
 import com.example.tmdb.model.TrendingTVShowsGenres
 import com.example.tmdb.model.TrendingTVShowsModel
 import com.example.tmdb.model.TrendingTVShowsResponse
-import com.example.tmdb.networking.PopularMoviesService
+import com.example.tmdb.networking.MoviesService
 import com.example.tmdb.paging.ScreensPagingSource
 import com.example.tmdb.room.MovieDb
 import com.example.tmdb.room.MoviesAndTv
@@ -27,26 +25,26 @@ import com.example.tmdb.utils.NetworkState
 import com.example.tmdb.utils.ScreenTypes
 import com.example.tmdb.utils.SharedPrefsUtils
 import com.example.tmdb.utils.TimeWindow
-import com.example.tmdb.utils.stringAbc
+import com.example.tmdb.utils.convertToDayWeekString
 import kotlinx.coroutines.flow.Flow
 
-class PopularMoviesRepository(
-    private val popularMoviesService: PopularMoviesService,
+class MoviesRepository(
+    private val moviesService: MoviesService,
     private val movieDb: MovieDb,
     private val applicationContext: Context,
 ) {
 
-    private val _popularMoviesResponse = MutableLiveData<PopularMoviesResponse?>()
-    val popularMoviesResponse: MutableLiveData<PopularMoviesResponse?> = _popularMoviesResponse
+    private val _popularMoviesResponse = MutableLiveData<MoviesResponse?>()
+    val popularMoviesResponse: MutableLiveData<MoviesResponse?> = _popularMoviesResponse
 
-    private val _topRatedMoviesResponse = MutableLiveData<PopularMoviesResponse?>()
-    val topRatedMoviesResponse: MutableLiveData<PopularMoviesResponse?> = _topRatedMoviesResponse
+    private val _topRatedMoviesResponse = MutableLiveData<MoviesResponse?>()
+    val topRatedMoviesResponse: MutableLiveData<MoviesResponse?> = _topRatedMoviesResponse
 
-    private val _upComingMoviesResponse = MutableLiveData<PopularMoviesResponse?>()
-    val upComingMoviesResponse: MutableLiveData<PopularMoviesResponse?> = _upComingMoviesResponse
+    private val _upComingMoviesResponse = MutableLiveData<MoviesResponse?>()
+    val upComingMoviesResponse: MutableLiveData<MoviesResponse?> = _upComingMoviesResponse
 
-    private val _trendingMoviesResponse = MutableLiveData<PopularMoviesResponse?>()
-    val trendingMoviesResponse: MutableLiveData<PopularMoviesResponse?> = _trendingMoviesResponse
+    private val _trendingMoviesResponse = MutableLiveData<MoviesResponse?>()
+    val trendingMoviesResponse: MutableLiveData<MoviesResponse?> = _trendingMoviesResponse
 
     private val _trendingTVShowsResponse = MutableLiveData<TrendingTVShowsResponse?>()
     val trendingTVShowsResponse: MutableLiveData<TrendingTVShowsResponse?> =
@@ -69,17 +67,11 @@ class PopularMoviesRepository(
         Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun showExceptionMessage(message: String?) {
-        // Show a toast message indicating an error occurred
-        // You can customize the message based on your requirements
-        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
-    }
-
 
     suspend fun getPopularMovies() {
         if (NetworkState.isInternetAvailable(applicationContext)) {
             try {
-                val response = popularMoviesService.getPopularMoviesResponse()
+                val response = moviesService.getPopularMoviesResponse()
                 Log.d("repo", "getPopularMovies: ${response.body()!!.popularMovies}")
                 if (response.body() != null) {
                     val moviesAndTvShowsList = response.body()!!.popularMovies.map {
@@ -99,7 +91,6 @@ class PopularMoviesRepository(
                         Log.d("repo", "getPopularMovies: is offline enabled false")
 
                     }
-//                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
                     _popularMoviesResponse.value = response.body()
                 } else {
                     showEmptyResponseMessage("")
@@ -120,21 +111,21 @@ class PopularMoviesRepository(
                 val popularMoviesListFromDb = movieDb.roomDao().getMoviesByType("Popular")
                 Log.d("repo", "getPopularMoviesFromDb: $popularMoviesListFromDb")
                 if (popularMoviesListFromDb.isNotEmpty()) {
-                    val popularMoviesModels = popularMoviesListFromDb.map {
-                        PopularMoviesModel(
+                    val moviesModels = popularMoviesListFromDb.map {
+                        MoviesModel(
                             popularMovieId = it.id,
                             posterPath = it.posterPath,
                             popularMovieTitle = it.title
                         )
                     }
 
-                    val popularMoviesResponse = PopularMoviesResponse(
+                    val moviesResponse = MoviesResponse(
                         page = null,
-                        popularMovies = popularMoviesModels,
+                        popularMovies = moviesModels,
                         totalPages = null,
                         totalResults = null
                     )
-                    _popularMoviesResponse.value = popularMoviesResponse
+                    _popularMoviesResponse.value = moviesResponse
                 } else {
                     _popularMoviesResponse.value = null
                 }
@@ -146,75 +137,36 @@ class PopularMoviesRepository(
 
     }
 
-//    suspend fun getPopularMoviesResponsePageWise(): MutableLiveData<List<PopularMoviesModel?>> {
-//        val popularMoviesMutableLiveDataResponse: MutableLiveData<List<PopularMoviesModel?>> =
-//            MutableLiveData()
-//        if (!NetworkState.isInternetAvailable(applicationContext)) {
-//            val popularMoviesListFromDb = movieDb.roomDao().getMoviesByType("Popular")
-//            Log.d("repo", "getPopularMoviesFromDb: $popularMoviesListFromDb")
-//            if (popularMoviesListFromDb.isNotEmpty()) {
-//                val popularMoviesModels = popularMoviesListFromDb.map {
-//                    PopularMoviesModel(
-//                        popularMovieId = it.id,
-//                        posterPath = it.posterPath,
-//                        popularMovieTitle = it.title
-//                    )
-//                } as ArrayList
-//
-////                val popularMoviesResponse = PopularMoviesResponse(
-////                    page = null,
-////                    popularMovies = popularMoviesModels,
-////                    totalPages = null,
-////                    totalResults = null
-////                )
-//
-//                popularMoviesMutableLiveDataResponse.value = popularMoviesModels
-//            } else {
-//                _popularMoviesResponse.value = null
-//            }
-//        }
-//
-//        return popularMoviesMutableLiveDataResponse
-//
-//    }
 
-    fun getPopularMoviesPerPage(): Flow<PagingData<PopularMoviesModel>> {
+    fun getPopularMoviesPerPage(): Flow<PagingData<MoviesModel>> {
         return Pager(PagingConfig(pageSize = 1, enablePlaceholders = false)) {
             ScreensPagingSource(
-                popularMoviesService, ScreenTypes.POPULAR, movieDb, applicationContext
+                moviesService, ScreenTypes.POPULAR, movieDb, applicationContext
             )
         }.flow
     }
 
 
-    fun getTopRatedMoviesPerPage(): Flow<PagingData<PopularMoviesModel>> =
+    fun getTopRatedMoviesPerPage(): Flow<PagingData<MoviesModel>> =
         Pager(PagingConfig(pageSize = 1, enablePlaceholders = false)) {
             ScreensPagingSource(
-                popularMoviesService, ScreenTypes.TOP_RATED, movieDb, applicationContext
+                moviesService, ScreenTypes.TOP_RATED, movieDb, applicationContext
             )
         }.flow
 
-    fun getUpcomingMoviesPerPage(): Flow<PagingData<PopularMoviesModel>> =
+    fun getUpcomingMoviesPerPage(): Flow<PagingData<MoviesModel>> =
         Pager(PagingConfig(pageSize = 1, enablePlaceholders = false)) {
             ScreensPagingSource(
-                popularMoviesService, ScreenTypes.UPCOMING, movieDb, applicationContext
+                moviesService, ScreenTypes.UPCOMING, movieDb, applicationContext
             )
         }.flow
 
-
-    /*popularMoviesService.getPopularMoviesResponsePerPage(page)*/
-
-//    suspend fun getTopRatedMoviesPerPage(page: Int) =
-//        popularMoviesService.getTopRatedMoviesResponsePerPage(page)
-//
-//    suspend fun getUpcomingMoviesPerPage(page: Int) =
-//        popularMoviesService.getUpcomingMoviesResponsePerPage(page)
 
     suspend fun getTopRatedMovies() {
 
         if (NetworkState.isInternetAvailable(applicationContext)) {
             try {
-                val response = popularMoviesService.getTopRatedMoviesResponse()
+                val response = moviesService.getTopRatedMoviesResponse()
                 if (response.body() != null) {
                     val moviesAndTvShowsList = response.body()!!.popularMovies.map {
                         MoviesAndTv(
@@ -233,7 +185,6 @@ class PopularMoviesRepository(
                     } else {
                         Log.d("repo", "getTopRatedMovies: is offline enabled false")
                     }
-//                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
                     _topRatedMoviesResponse.value = response.body()
                 } else {
                     showEmptyResponseMessage("")
@@ -253,23 +204,22 @@ class PopularMoviesRepository(
                 val topRatedMoviesListFromDb = movieDb.roomDao().getMoviesByType(type = "Top rated")
                 Log.d("repo", "getTopRatedMoviesFromDb: $topRatedMoviesListFromDb")
                 if (topRatedMoviesListFromDb.isNotEmpty()) {
-                    val popularMoviesModels = topRatedMoviesListFromDb.map {
-                        PopularMoviesModel(
+                    val moviesModels = topRatedMoviesListFromDb.map {
+                        MoviesModel(
                             popularMovieId = it.id,
                             posterPath = it.posterPath,
                             popularMovieTitle = it.title
                         )
                     }
 
-                    val topRatedMoviesResponse = PopularMoviesResponse(
+                    val topRatedMoviesResponse = MoviesResponse(
                         page = null,
-                        popularMovies = popularMoviesModels,
+                        popularMovies = moviesModels,
                         totalPages = null,
                         totalResults = null
                     )
                     _topRatedMoviesResponse.value = topRatedMoviesResponse
                 } else {
-//                    showEmptyResponseMessage("")
                     _topRatedMoviesResponse.value = null
                 }
 
@@ -283,7 +233,7 @@ class PopularMoviesRepository(
     suspend fun getUpcomingMovies() {
         if (NetworkState.isInternetAvailable(applicationContext)) {
             try {
-                val response = popularMoviesService.getUpcomingMoviesResponse()
+                val response = moviesService.getUpcomingMoviesResponse()
                 if (response.body() != null) {
                     val moviesAndTvShowsList = response.body()!!.popularMovies.map {
                         MoviesAndTv(
@@ -300,7 +250,6 @@ class PopularMoviesRepository(
                     } else {
                         Log.d("repo", "getUpcomingMovies: is offline enabled false")
                     }
-//                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
                     _upComingMoviesResponse.value = response.body()
                 } else {
                     showEmptyResponseMessage("")
@@ -320,17 +269,17 @@ class PopularMoviesRepository(
                 val upcomingMoviesListFromDb = movieDb.roomDao().getMoviesByType(type = "Upcoming")
                 Log.d("repo", "getUpcomingMoviesFromDb: $upcomingMoviesListFromDb")
                 if (upcomingMoviesListFromDb.isNotEmpty()) {
-                    val popularMoviesModels = upcomingMoviesListFromDb.map {
-                        PopularMoviesModel(
+                    val moviesModels = upcomingMoviesListFromDb.map {
+                        MoviesModel(
                             popularMovieId = it.id,
                             posterPath = it.posterPath,
                             popularMovieTitle = it.title
                         )
                     }
 
-                    val upcomingMoviesResponse = PopularMoviesResponse(
+                    val upcomingMoviesResponse = MoviesResponse(
                         page = null,
-                        popularMovies = popularMoviesModels,
+                        popularMovies = moviesModels,
                         totalPages = null,
                         totalResults = null
                     )
@@ -348,10 +297,10 @@ class PopularMoviesRepository(
     suspend fun getTrendingMovies(type: String) {
         if (NetworkState.isInternetAvailable(applicationContext)) {
             try {
-                val response = popularMoviesService.getTrendingMoviesResponse(type)
+                val response = moviesService.getTrendingMoviesResponse(type)
                 if (response.body() != null) {
-                    val isDay = if (TimeWindow.DAY.stringAbc() == type) 1 else 0
-                    val isWeek = if (TimeWindow.WEEK.stringAbc() == type) 1 else 0
+                    val isDay = if (TimeWindow.DAY.convertToDayWeekString() == type) 1 else 0
+                    val isWeek = if (TimeWindow.WEEK.convertToDayWeekString() == type) 1 else 0
                     val moviesAndTvShowsList = response.body()!!.popularMovies.map {
                         MoviesAndTv(
                             id = it.popularMovieId,
@@ -365,12 +314,10 @@ class PopularMoviesRepository(
                     }
                     val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
                     if (isOfflineEnabled) {
-//                        Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
                         movieDb.roomDao().insertMovies(moviesAndTvShowsList)
                     } else {
                         Log.d("repo", "getTrending Movies: is offline enabled false")
                     }
-                    // movieDb.roomDao().insertMovies(moviesAndTvShowsList)
                     _trendingMoviesResponse.value = response.body()
                 } else {
                     showEmptyResponseMessage("")
@@ -387,56 +334,54 @@ class PopularMoviesRepository(
                     _trendingMoviesResponse.value = null
                     return
                 }
-                if (TimeWindow.DAY.stringAbc() == type) {
+                if (TimeWindow.DAY.convertToDayWeekString() == type) {
                     val trendingMoviesListDayWise = movieDb.roomDao().getTrendingMoviesDayWise(
                         type = "Trending Movies", isDay = 1
                     )
                     Log.d("repo", "getTrendingMoviesListDayWise: $trendingMoviesListDayWise")
 
                     if (trendingMoviesListDayWise.isNotEmpty()) {
-                        val popularMoviesModels = trendingMoviesListDayWise.map {
-                            PopularMoviesModel(
+                        val moviesModels = trendingMoviesListDayWise.map {
+                            MoviesModel(
                                 popularMovieId = it.id,
                                 posterPath = it.posterPath,
                                 popularMovieTitle = it.title
                             )
                         }
 
-                        val trendingMoviesResponseDayWise = PopularMoviesResponse(
+                        val trendingMoviesResponseDayWise = MoviesResponse(
                             page = null,
-                            popularMovies = popularMoviesModels,
+                            popularMovies = moviesModels,
                             totalPages = null,
                             totalResults = null
                         )
                         _trendingMoviesResponse.value = trendingMoviesResponseDayWise
                     } else {
-//                        showEmptyResponseMessage("trending movies day wise fetch failed")
                         _trendingMoviesResponse.value = null
                     }
-                } else if (TimeWindow.WEEK.stringAbc() == type) {
+                } else if (TimeWindow.WEEK.convertToDayWeekString() == type) {
                     val trendingMoviesListWeekWise = movieDb.roomDao().getTrendingMoviesWeekWise(
                         type = "Trending Movies", isWeek = 1
                     )
                     Log.d("repo", "getTrendingMoviesListWeekWise: $trendingMoviesListWeekWise")
 
                     if (trendingMoviesListWeekWise.isNotEmpty()) {
-                        val popularMoviesModels = trendingMoviesListWeekWise.map {
-                            PopularMoviesModel(
+                        val moviesModels = trendingMoviesListWeekWise.map {
+                            MoviesModel(
                                 popularMovieId = it.id,
                                 posterPath = it.posterPath,
                                 popularMovieTitle = it.title
                             )
                         }
 
-                        val trendingMoviesResponseWeekWise = PopularMoviesResponse(
+                        val trendingMoviesResponseWeekWise = MoviesResponse(
                             page = null,
-                            popularMovies = popularMoviesModels,
+                            popularMovies = moviesModels,
                             totalPages = null,
                             totalResults = null
                         )
                         _trendingMoviesResponse.value = trendingMoviesResponseWeekWise
                     } else {
-//                        showEmptyResponseMessage("trending movies week wise fetch failed")
                         _trendingMoviesResponse.value = null
                     }
                 }
@@ -451,10 +396,10 @@ class PopularMoviesRepository(
     suspend fun getTrendingTVShows(type: String) {
         if (NetworkState.isInternetAvailable(applicationContext)) {
             try {
-                val response = popularMoviesService.getTrendingTVShowsResponse(type)
+                val response = moviesService.getTrendingTVShowsResponse(type)
                 if (response.body() != null) {
-                    val isDay = if (TimeWindow.DAY.stringAbc() == type) 1 else 0
-                    val isWeek = if (TimeWindow.WEEK.stringAbc() == type) 1 else 0
+                    val isDay = if (TimeWindow.DAY.convertToDayWeekString() == type) 1 else 0
+                    val isWeek = if (TimeWindow.WEEK.convertToDayWeekString() == type) 1 else 0
                     val moviesAndTvShowsList = response.body()!!.trendingTVShows.map {
                         MoviesAndTv(
                             id = it.trendingTVShowId,
@@ -467,12 +412,10 @@ class PopularMoviesRepository(
                     }
                     val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
                     if (isOfflineEnabled) {
-//                        Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
                         movieDb.roomDao().insertMovies(moviesAndTvShowsList)
                     } else {
                         Log.d("repo", "getPopularMovies: is offline enabled false")
                     }
-//                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
                     _trendingTVShowsResponse.value = response.body()
                 } else {
                     showEmptyResponseMessage("")
@@ -489,7 +432,7 @@ class PopularMoviesRepository(
                     _trendingTVShowsResponse.value = null
                     return
                 }
-                if (TimeWindow.DAY.stringAbc() == type) {
+                if (TimeWindow.DAY.convertToDayWeekString() == type) {
                     val trendingTVShowsListFromDbDayWise = movieDb.roomDao()
                         .getTrendingTVShowsDayWise(type = "Trending TV Shows", isDay = 1)
                     Log.d("repo", "getTrendingTVShowsFromDb: $trendingTVShowsListFromDbDayWise")
@@ -508,10 +451,9 @@ class PopularMoviesRepository(
                         )
                         _trendingTVShowsResponse.value = trendingTVShowsResponseDayWise
                     } else {
-//                        showEmptyResponseMessage("trending tv shows day wise fetch failed")
                         _trendingTVShowsResponse.value = null
                     }
-                } else if (TimeWindow.WEEK.stringAbc() == type) {
+                } else if (TimeWindow.WEEK.convertToDayWeekString() == type) {
                     val trendingTVShowsListFromDbWeekWise = movieDb.roomDao()
                         .getTrendingTVShowsWeekWise(type = "Trending TV Shows", isWeek = 1)
                     Log.d("repo", "getTrendingTVShowsFromDb: $trendingTVShowsListFromDbWeekWise")
@@ -530,7 +472,6 @@ class PopularMoviesRepository(
                         )
                         _trendingTVShowsResponse.value = trendingTVShowsResponseWeekWise
                     } else {
-//                        showEmptyResponseMessage("trending tv shows week wise fetch failed")
                         _trendingTVShowsResponse.value = null
                     }
                 }
@@ -547,7 +488,7 @@ class PopularMoviesRepository(
     suspend fun getMoviesDetails(id: Long, type: String?) {
         if (NetworkState.isInternetAvailable(applicationContext)) {
             try {
-                val response = popularMoviesService.getMoviesDetails(id)
+                val response = moviesService.getMoviesDetails(id)
                 if (response.body() != null) {
                     val detailsResponse = response.body()!!
                     val genres = detailsResponse.genres
@@ -573,13 +514,11 @@ class PopularMoviesRepository(
                     )
                     val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
                     if (isOfflineEnabled) {
-//                        Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
                         movieDb.roomDao().insertMoviesAndTvDetails(moviesDetail)
                     } else {
                         Log.d("repo", "getPopularMovies: is offline enabled false")
                     }
 
-//                    movieDb.roomDao().insertMoviesAndTvDetails(moviesDetail)
                     _movieDetailsResponse.value = moviesDetail
                 } else {
                     showEmptyResponseMessage("")
@@ -623,7 +562,6 @@ class PopularMoviesRepository(
                 } else {
                     _movieDetailsResponse.value = moviesDetails
                 }
-//                _movieDetailsResponse.value = detailsResponse
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -635,7 +573,7 @@ class PopularMoviesRepository(
     suspend fun getTrendingTVShowsDetails(id: Long, trendingTvShows: String?) {
         if (NetworkState.isInternetAvailable(applicationContext)) {
             try {
-                val response = popularMoviesService.getTrendingTvShowsDetails(id)
+                val response = moviesService.getTrendingTvShowsDetails(id)
                 if (response.body() != null) {
                     val trendingTvShowsDetailsResponse = response.body()!!
                     Log.d(
@@ -663,12 +601,10 @@ class PopularMoviesRepository(
                     )
                     val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
                     if (isOfflineEnabled) {
-//                        Log.d("repo", "isOfflineEnabledafter: $isOfflineEnabled")
                         movieDb.roomDao().insertMoviesAndTvDetails(trendingTvShowsDetails)
                     } else {
                         Log.d("repo", "getPopularMovies: is offline enabled false")
                     }
-//                    movieDb.roomDao().insertMoviesAndTvDetails(trendingTvShowsDetails)
                     _trendingTVShowsDetailsResponse.value = trendingTvShowsDetails
                 } else {
                     showEmptyResponseMessage("")
@@ -711,7 +647,6 @@ class PopularMoviesRepository(
                 } else {
                     _trendingTVShowsDetailsResponse.value = trendingTVShowsDetails
                 }
-//                _trendingTVShowsDetailsResponse.value = trendingTVShowsDetailsResponse
 
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -725,7 +660,7 @@ class PopularMoviesRepository(
 
         if (NetworkState.isInternetAvailable(applicationContext)) {
             try {
-                val response = popularMoviesService.getNowPlayingMoviesResponse()
+                val response = moviesService.getNowPlayingMoviesResponse()
                 if (response.body() != null) {
                     val moviesAndTvShowsList = response.body()!!.nowPlayingMovies.map {
                         MoviesAndTv(
@@ -744,7 +679,6 @@ class PopularMoviesRepository(
                     } else {
                         Log.d("repo", "getNowPlayingMovies: is offline enabled false")
                     }
-//                    movieDb.roomDao().insertMovies(moviesAndTvShowsList)
                     _nowPlayingMoviesResponse.value = response.body()
                 } else {
                     showEmptyResponseMessage("")
@@ -779,7 +713,6 @@ class PopularMoviesRepository(
                     )
                     _nowPlayingMoviesResponse.value = nowPlayingMoviesResponse
                 } else {
-//                    showEmptyResponseMessage("now playing movies details fetched failed")
                     _nowPlayingMoviesResponse.value = null
                 }
 

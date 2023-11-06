@@ -13,5 +13,5 @@ object RetrofitClient {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val service = retrofit.create(PopularMoviesService::class.java)
+    val service = retrofit.create(MoviesService::class.java)
 }
