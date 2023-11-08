@@ -72,7 +72,9 @@ class ScreensPagingSource(
             val isOfflineEnabled = SharedPrefsUtils.getIsOfflineEnabled(applicationContext)
             if (!isOfflineEnabled) {
                 Toast.makeText(
-                    applicationContext, "You are offline! Error loading movies, Please enable wifi.", Toast.LENGTH_LONG
+                    applicationContext,
+                    "You are offline! Error loading movies, Please enable wifi.",
+                    Toast.LENGTH_LONG
                 ).show()
                 val e = Exception()
                 return LoadResult.Error(e)
@@ -97,13 +99,15 @@ class ScreensPagingSource(
             if (currentPage != CURRENT_PAGE) delay(LOAD_DELAY_MILLIS)
             Log.d("screenspagingsourceoff", "data: $movieTypesFromDb")
             Log.d("screenspagingsourceoff", "movies: $movies")
-            val nextKey = if (movieTypesFromDb.isEmpty()) {
-                null
-            } else {
-                currentPage + 1
-            }
+//            val nextKey = if (movieTypesFromDb.isEmpty()) {
+//                null
+//            } else {
+//                currentPage + 1
+//            }
             return LoadResult.Page(
-                data = movies, prevKey = if (currentPage == 1) null else -1, nextKey = nextKey
+                data = movies,
+                prevKey = if (currentPage == 0) null else currentPage - 1,
+                nextKey = null
             )
 
         }
@@ -122,7 +126,10 @@ class ScreensPagingSource(
 
         val popularMovies = popularMovies.map {
             MoviesAndTv(
-                title = it.popularMovieTitle!!, posterPath = it.posterPath, movieType = "Popular"
+                title = it.popularMovieTitle!!,
+                posterPath = it.posterPath,
+                movieType = "Popular",
+                id = it.popularMovieId
             )
         }
 
@@ -134,7 +141,10 @@ class ScreensPagingSource(
 
         val topRatedMovies = popularMovies.map {
             MoviesAndTv(
-                title = it.popularMovieTitle!!, posterPath = it.posterPath, movieType = "Top rated"
+                title = it.popularMovieTitle!!,
+                posterPath = it.posterPath,
+                movieType = "Top rated",
+                id = it.popularMovieId
             )
         }
 
@@ -146,7 +156,10 @@ class ScreensPagingSource(
 
         val upcomingMovies = popularMovies.map {
             MoviesAndTv(
-                title = it.popularMovieTitle!!, posterPath = it.posterPath, movieType = "Upcoming"
+                title = it.popularMovieTitle!!,
+                posterPath = it.posterPath,
+                movieType = "Upcoming",
+                id = it.popularMovieId
             )
         }
 

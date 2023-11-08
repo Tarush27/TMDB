@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/screens_mcv"
-    android:layout_width="wrap_content"
+    android:layout_width="180dp"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp">
+    android:layout_margin="10dp"
+    >
 
     <!--<com.google.android.material.card.MaterialCardView
         android:id="@+id/screens_mcv"
@@ -19,28 +20,24 @@
         app:layout_constraintTop_toTopOf="parent"
         app:strokeWidth="0.0dp">-->
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/screens_cv"
         android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="15dp"
+        android:layout_height="270dp"
+        app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeWidth="0.0dp">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/screens_iv"
-            android:layout_width="180dp"
-            android:layout_height="270dp"
-            android:adjustViewBounds="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:contentDescription="@string/image"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/sawxp" />
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
     <!--        <androidx.appcompat.widget.AppCompatImageView-->
     <!--            android:id="@+id/screens_iv"-->
     <!--            android:layout_width="180dp"-->
