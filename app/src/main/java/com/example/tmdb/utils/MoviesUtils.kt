@@ -1,10 +1,12 @@
 package com.example.tmdb.utils
 
+import com.example.tmdb.BuildConfig
+
 class MoviesUtils {
     companion object {
         const val API_ACCESS_TOKEN =
             "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZjU5MGJlOGY4ODFlYmNlMTRiNDA4OGUwODEyNGQ4NCIsInN1YiI6IjY1MWY5OGM0NWIxMjQwMDBlM2QzNTNmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Ok7w39V6uCeBukqnaeSTJt1KdWKPE5e-uFF7rqXZWY0"
-        const val API_KEY = "1f590be8f881ebce14b4088e08124d84"
+        const val API_KEY = BuildConfig.API_KEY
 
         const val MOVIE_DETAILS_SCREEN_BASE_BACKDROP_PATH = "https://image.tmdb.org/t/p/original"
         const val TRENDING_TV_SHOWS_DETAILS_SCREEN_BASE_BACKDROP_PATH =
