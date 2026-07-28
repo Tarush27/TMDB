@@ -1,3 +1,21 @@
+The Movies Database
+This app basically displays a collection of movies which are popular, top-rated, or
+trending, etc and even trending tv shows along with their details whether offline or
+online.
+
+
+- MVVM
+- Live Data
+- Kotlin Coroutines
+- Room
+- Retrofit
+- Pagination
+- Firebase Remote Config
+- UI/UX (Activity, Fragment, RecyclerView, Material Design Components, View Binding)
+- Jetpack Navigation Component
+- Shared Preferences
+- Coil
+
 ![tmdb_eight](https://github.com/Tarush27/TMDB/assets/51998612/5ffd9e5a-8a84-4904-8d4b-0c88df77a2cb)
 ![tmdb_two](https://github.com/Tarush27/TMDB/assets/51998612/30070c32-8fe6-48e5-ba20-37ee0f9fc987)
 ![tmdb_twelve](https://github.com/Tarush27/TMDB/assets/51998612/58c00640-3ab6-4c86-af27-cb1c26098dbb)
