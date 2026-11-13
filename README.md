@@ -1,20 +1,37 @@
-The Movies Database
-This app basically displays a collection of movies which are popular, top-rated, or
-trending, etc and even trending tv shows along with their details whether offline or
-online.
+# The Movies Database (TMDB)
 
+A native Android app built with Kotlin and MVVM that lets users browse popular, top-rated and trending movies, plus trending TV shows, with full details available online and offline. Data comes from the TMDB REST API through Retrofit and is cached locally with Room for a reliable offline-first experience.
 
-- MVVM
-- Live Data
-- Kotlin Coroutines
-- Room
-- Retrofit
-- Pagination
-- Firebase Remote Config
-- UI/UX (Activity, Fragment, RecyclerView, Material Design Components, View Binding)
-- Jetpack Navigation Component
-- Shared Preferences
-- Coil
+## Features
+- Browse movies by category: popular, top-rated and trending
+- Trending TV shows with detail screens
+- Offline support: content is cached in a local Room (SQLite) database, so it stays readable without a network connection
+- Smooth infinite scrolling with Jetpack Pagination
+- Remote feature configuration with Firebase Remote Config
+- Fast, memory-efficient image loading with Coil
+- Persisted user preferences with Shared Preferences
+
+## Architecture
+- **MVVM** with ViewModel and LiveData for lifecycle-aware, reactive UI updates
+- **Repository pattern** coordinating the remote API and the local Room database
+- **Kotlin Coroutines** for asynchronous, non-blocking network and database work
+- **Jetpack Navigation component** for in-app navigation between screens
+
+## Tech Stack
+| Area | Tools |
+|---|---|
+| Language | Kotlin |
+| Architecture | MVVM, ViewModel, LiveData |
+| Concurrency | Kotlin Coroutines |
+| Networking | Retrofit, REST API (TMDB) |
+| Local storage | Room (SQLite), Shared Preferences |
+| Pagination | Jetpack Pagination |
+| UI | Activities, Fragments, RecyclerView, Material Design Components, View Binding |
+| Navigation | Jetpack Navigation component |
+| Image loading | Coil |
+| Remote config | Firebase Remote Config |
+
+Screenshots:
 
 ![tmdb_eight](https://github.com/Tarush27/TMDB/assets/51998612/5ffd9e5a-8a84-4904-8d4b-0c88df77a2cb)
 ![tmdb_two](https://github.com/Tarush27/TMDB/assets/51998612/30070c32-8fe6-48e5-ba20-37ee0f9fc987)
